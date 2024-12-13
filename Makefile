@@ -1,12 +1,12 @@
 # $Id$
 
-include config.mk
-
 .PHONY: all distclean clean ./Server
 
-FLAGS = TOPDIR=$(TOPDIR)
+DIRS = ./Server
 
-all: ./Server
+FLAGS = TOPDIR=..
+
+all: $(DIRS)
 
 ./Server:: config.h
 	$(MAKE) -C $@ $(FLAGS)
@@ -15,7 +15,13 @@ config.h config.mk:
 	./config
 
 clean:
-	$(MAKE) -C ./Server clean $(FLAGS)
+	for i in $(DIRS); do \
+		$(MAKE) -C $$i clean $(FLAGS) ; \
+	done
 
-distclean: clean
+distclean:
+	touch config.mk
+	for i in $(DIRS); do \
+		$(MAKE) -C $$i clean $(FLAGS) ; \
+	done
 	rm -f config.h config.mk
