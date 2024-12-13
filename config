@@ -73,14 +73,25 @@ test_c () {
 	result=0
 	rm -f /tmp/$$.c
 	printf "$1" > /tmp/$$.c
-	$CC -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
-	if [ "$?" = "0" ]; then
-		echo "yes"
+	if [ "x$2" = "x" ]; then
+		$CC -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+		if [ "$?" = "0" ]; then
+			echo "yes"
+		else
+			echo "no"
+			result=1
+		fi
+		rm -f /tmp/$$.c /tmp/$$.o
 	else
-		echo "no"
-		result=1
+		$CC -o /tmp/$$ /tmp/$$.c $2 >/dev/null 2>&1
+		if [ "$?" = "0" ]; then
+			echo "yes"
+		else
+			echo "no"
+			result=1
+		fi
+		rm -f /tmp/$$.c /tmp/$$
 	fi
-	rm -f /tmp/$$.c /tmp/$$.o
 	return $result
 }
 
@@ -108,13 +119,19 @@ elif [ "x$WINSOCK" = "xno" ]; then
 	WINSOCK="n"
 fi
 
-echo "#ifdef __NEWSDIST_CONFIG_H__" > config.h
+echo "/* This file is auto-generated */" > config.h
+echo "#ifdef __NEWSDIST_CONFIG_H__" >> config.h
 echo "#define __NEWSDIST_CONFIG_H__" >> config.h
 
 if [ "$WINSOCK" = "y" ]; then
+	LIBS="$LIBS -lws2_32"
 	log "Guessing this is Windows build"
 	echo "#define USE_WINSOCK" >> config.h
+	log_raw "Checking if select exists: "
+	test_c "#include <winsock.h>\nint main(int argc, char** argv){void* s = select;}" || quit
 	echo "#define HAS_SELECT" >> config.h
+	log_raw "Checking if AF_INET exists: "
+	test_c "#include <winsock.h>\nint main(int argc, char** argv){(void)AF_INET;}" || quit
 else
 	log_raw "Checking if select exists: "
 	if test_c "#include <sys/select.h>\nint main(int argc, char** argv){void* s = select;}"; then
@@ -125,9 +142,35 @@ else
 		echo "#define HAS_POLL" >> config.h
 	fi
 	log_raw "Checking if AF_INET exists: "
-	if ! test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;}"; then
-		quit
-	fi
+	test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;}" || quit
+fi
+
+while [ ! "x$OPENSSL" = "xno" -a ! "x$OPENSSL" = "xyes" -a ! "x$OPENSSL" = "xn" -a ! "x$OPENSSL" = "xy" ]; do
+	getinput "Do you want an OpenSSL" "y"
+	OPENSSL="`echo "$input" | tr '[:upper:]' '[:lower:]'`"
+done
+
+if [ "x$OPENSSL" = "xyes" ]; then
+	OPENSSL="y"
+elif [ "x$OPENSSL" = "xno" ]; then
+	OPENSSL="n"
+fi
+
+if [ "$OPENSSL" = "y" ]; then
+	log_raw "Checking if OpenSSL works: "
+	test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;}" "-lcrypto -lssl" || quit
+	echo "#define HAS_OPENSSL" >> config.h
 fi
 
 echo "#endif" >> config.h
+
+echo "# This file is auto-generated" > config.mk
+echo "CC = $CC" >> config.mk
+echo "CFLAGS = -std=c99 -O2" >> config.mk
+echo "LDFLAGS = -O2" >> config.mk
+echo "LIBS = $LIBS" >> config.mk
+echo "TOPDIR = `pwd`" >> config.mk
+
+log ""
+log "Configuration successful, now run \`make\'"
+log ""
