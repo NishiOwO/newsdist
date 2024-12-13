@@ -1,6 +1,10 @@
 #!/bin/sh
 # $Id$
 
+VERSION="1.0"
+
+stty -echo
+
 if [ ! "x$1" = "x" ]; then
 	. "$1"
 fi
@@ -60,6 +64,7 @@ quit () {
 	error 'Configuration aborted.'
 	rm -f config.h
 	rm -f config.mk
+	stty echo
 	exit 1
 }
 
@@ -71,7 +76,9 @@ getinput () {
 		else
 			$PRINTF "\x1b[1m\x1b[34m???\x1b[m $1 [$default]? "
 		fi
+		stty echo
 		read input || quit
+		stty -echo
 		if [ "x$input" = "x" -a "x$default" = "x" ]; then
 			error "There is no default value"
 		elif [ "x$input" = "x" -a ! "x$default" = "x" ]; then
@@ -88,7 +95,7 @@ test_c () {
 	rm -f /tmp/$$.c
 	$PRINTF "$1" > /tmp/$$.c
 	if [ "x$2" = "x" ]; then
-		$CC -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+		$CC $CFLAGS -Werror -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
 		if [ "$?" = "0" ]; then
 			echo "yes"
 		else
@@ -97,7 +104,7 @@ test_c () {
 		fi
 		rm -f /tmp/$$.c /tmp/$$.o
 	else
-		$CC -o /tmp/$$ /tmp/$$.c $2 >/dev/null 2>&1
+		$CC $CFLAGS $LDFLAGS -Werror -o /tmp/$$ /tmp/$$.c $2 >/dev/null 2>&1
 		if [ "$?" = "0" ]; then
 			echo "yes"
 		else
@@ -164,6 +171,11 @@ else
 	test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;}" || quit
 fi
 
+log_raw "Checking if strdup exists: "
+if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;}"; then
+	echo "#define HAS_STRDUP" >> config.h
+fi
+
 while [ ! "x$OPENSSL" = "xno" -a ! "x$OPENSSL" = "xyes" -a ! "x$OPENSSL" = "xn" -a ! "x$OPENSSL" = "xy" ]; do
 	getinput "Do you want an OpenSSL" "y"
 	OPENSSL="`echo "$input" | tr '[:upper:]' '[:lower:]'`"
@@ -185,7 +197,7 @@ echo "#endif" >> config.h
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
-echo "CFLAGS = $CFLAGS -std=c99 -O2" >> config.mk
+echo "CFLAGS = $CFLAGS -std=c99 -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\"" >> config.mk
 echo "LDFLAGS = $LDFLAGS -O2" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
@@ -194,3 +206,5 @@ echo "EXEC = $EXEC" >> config.mk
 log ""
 log "Configuration successful, now run \`make\'"
 log ""
+
+stty echo
