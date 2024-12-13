@@ -2,16 +2,20 @@
 
 include config.mk
 
-.PHONY: all clean ./Server
+.PHONY: all distclean clean ./Server
+
+FLAGS = TOPDIR=$(TOPDIR)
 
 all: ./Server
 
-./Server: config.h
+./Server:: config.h
 	$(MAKE) -C $@ $(FLAGS)
 
 config.h config.mk:
 	./config
 
 clean:
+	$(MAKE) -C ./Server clean $(FLAGS)
+
+distclean: clean
 	rm -f config.h config.mk
-	$(MAKE) -C ./Server $(FLAGS)
