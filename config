@@ -1,0 +1,73 @@
+#!/bin/sh
+# $Id$
+
+input=""
+
+printf "\x1b[m"
+
+error () {
+	printf "\x1b[1m\x1b[31m!!!\x1b[m $1\n"
+}
+
+warn () {
+	printf "\x1b[1m\x1b[33m!!!\x1b[m $1\n"
+}
+
+info () {
+	printf "\x1b[1m\x1b[37m???\x1b[m $1\n"
+}
+
+log () {
+	printf "\x1b[1m\x1b[37m   \x1b[m $1\n"
+}
+
+quit () {
+	log ""
+	error 'Configuration aborted.'
+	rm -f config.h
+	rm -f config.mk
+	exit 1
+}
+
+getinput () {
+	default="$2"
+	while true; do
+		if [ "x$2" = "x" ]; then
+			printf "\x1b[1m\x1b[34m???\x1b[m $1? "
+		else
+			printf "\x1b[1m\x1b[34m???\x1b[m $1 [$default]? "
+		fi
+		read input || quit
+		if [ "x$input" = "x" -a "x$default" = "x" ]; then
+			error "There is no default value"
+		elif [ "x$input" = "x" -a ! "x$default" = "x" ]; then
+			input="$default"
+			break
+		elif [ ! "x$input" = "x" ]; then
+			break
+		fi
+	done
+}
+
+trap quit 2
+
+log ""
+log "Welcome to NewsDist build environment configuration utility."
+log "NewsDist is a small (enough) NNTP server."
+log "         is under public-domain."
+log ""
+
+if [ "x$CC" = "x" ]; then
+	getinput "What is your C compiler" "cc"
+	CC="$input"
+fi
+
+while [ ! "x$WINSOCK" = "xno" -a ! "x$WINSOCK" = "xyes" -a ! "x$WINSOCK" = "xn" -a ! "x$WINSOCK" = "xy" ]; do
+	getinput "Do you need WinSock?" "n"
+	WINSOCK="`echo "$input" | tr '[:upper:]' '[:lower:]'`"
+	if [ "x$WINSOCK" = "xyes" ]; then
+		WINSOCK="y"
+	elif [ "x$WINSOCK" = "xno" ]; then
+		WINSOCK="n"
+	fi
+done
