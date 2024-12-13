@@ -1,24 +1,44 @@
 #!/bin/sh
 # $Id$
 
+if [ ! "x$1" = "x" ]; then
+	. "$1"
+fi
+
 input=""
 
 printf "\x1b[m"
 
+error_raw () {
+	printf "\x1b[1m\x1b[31m!!!\x1b[m $1"
+}
+
+warn_raw () {
+	printf "\x1b[1m\x1b[33m!!!\x1b[m $1"
+}
+
+info_raw () {
+	printf "\x1b[1m\x1b[37m???\x1b[m $1"
+}
+
+log_raw () {
+	printf "\x1b[1m\x1b[37m   \x1b[m $1"
+}
+
 error () {
-	printf "\x1b[1m\x1b[31m!!!\x1b[m $1\n"
+	error_raw "$1\n"
 }
 
 warn () {
-	printf "\x1b[1m\x1b[33m!!!\x1b[m $1\n"
+	warn_raw "$1\n"
 }
 
 info () {
-	printf "\x1b[1m\x1b[37m???\x1b[m $1\n"
+	info_raw "$1\n"
 }
 
 log () {
-	printf "\x1b[1m\x1b[37m   \x1b[m $1\n"
+	log_raw "$1\n"
 }
 
 quit () {
@@ -49,6 +69,21 @@ getinput () {
 	done
 }
 
+test_c () {
+	result=0
+	rm -f /tmp/$$.c
+	printf "$1" > /tmp/$$.c
+	$CC -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		echo "yes"
+	else
+		echo "no"
+		result=1
+	fi
+	rm -f /tmp/$$.c /tmp/$$.o
+	return $result
+}
+
 trap quit 2
 
 log ""
@@ -63,11 +98,36 @@ if [ "x$CC" = "x" ]; then
 fi
 
 while [ ! "x$WINSOCK" = "xno" -a ! "x$WINSOCK" = "xyes" -a ! "x$WINSOCK" = "xn" -a ! "x$WINSOCK" = "xy" ]; do
-	getinput "Do you need WinSock?" "n"
+	getinput "Do you need WinSock" "n"
 	WINSOCK="`echo "$input" | tr '[:upper:]' '[:lower:]'`"
-	if [ "x$WINSOCK" = "xyes" ]; then
-		WINSOCK="y"
-	elif [ "x$WINSOCK" = "xno" ]; then
-		WINSOCK="n"
-	fi
 done
+
+if [ "x$WINSOCK" = "xyes" ]; then
+	WINSOCK="y"
+elif [ "x$WINSOCK" = "xno" ]; then
+	WINSOCK="n"
+fi
+
+echo "#ifdef __NEWSDIST_CONFIG_H__" > config.h
+echo "#define __NEWSDIST_CONFIG_H__" >> config.h
+
+if [ "$WINSOCK" = "y" ]; then
+	log "Guessing this is Windows build"
+	echo "#define USE_WINSOCK" >> config.h
+	echo "#define HAS_SELECT" >> config.h
+else
+	log_raw "Checking if select exists: "
+	if test_c "#include <sys/select.h>\nint main(int argc, char** argv){void* s = select;}"; then
+		echo "#define HAS_SELECT" >> config.h
+	fi
+	log_raw "Checking if poll exists: "
+	if test_c "#include <sys/poll.h>\nint main(int argc, char** argv){void* s = poll;}"; then
+		echo "#define HAS_POLL" >> config.h
+	fi
+	log_raw "Checking if AF_INET exists: "
+	if ! test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;}"; then
+		quit
+	fi
+fi
+
+echo "#endif" >> config.h
