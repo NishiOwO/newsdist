@@ -1,0 +1,16 @@
+#!/bin/sh
+# $Id$
+
+. ./Maintainer/tools.sh
+
+CFLAGS=`cat config.mk | grep CFLAGS | sed "s/CFLAGS = *//g" | grep -oE -- "-D[^ ]+" | sed 's/\\\\//g'`
+ERRORS=0
+for i in $DIRS; do
+	echo "--- $i"
+	lint -nug $CFLAGS `find $i -name "*.c"`
+	if [ ! "$?" = "0" ]; then
+		ERRORS=$(($ERRORS + 1))
+	fi
+done
+echo
+echo "$ERRORS errors"
