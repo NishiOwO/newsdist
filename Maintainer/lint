@@ -7,7 +7,7 @@ CFLAGS=`cat config.mk | grep CFLAGS | sed "s/CFLAGS = *//g" | grep -oE -- "-D[^ 
 ERRORS=0
 for i in $DIRS; do
 	echo "--- $i"
-	lint -nug $CFLAGS `find $i -name "*.c"`
+	lint -Ppnugs -Drestrict= -D__attribute__\(x\)= $CFLAGS `find $i -name "*.c"`
 	if [ ! "$?" = "0" ]; then
 		ERRORS=$(($ERRORS + 1))
 	fi

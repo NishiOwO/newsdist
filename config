@@ -197,7 +197,7 @@ echo "#endif" >> config.h
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
-echo "CFLAGS = $CFLAGS -std=c99 -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\"" >> config.mk
+echo "CFLAGS = $CFLAGS -ansi -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\"" >> config.mk
 echo "LDFLAGS = $LDFLAGS -O2" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
