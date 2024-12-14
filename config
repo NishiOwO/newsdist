@@ -195,7 +195,7 @@ fi
 
 echo "#endif" >> config.h
 
-log_raw "Finding yacc: "
+log_raw "Finding Yacc: "
 if [ "x$YACC" = "x" ]; then
 	for i in byacc bison yacc; do
 		OLDIFS="$IFS"
@@ -233,6 +233,31 @@ else
 fi
 rm -f y.tab.c /tmp/test.y
 
+log_raw "Finding Lex: "
+if [ "x$LEX" = "x" ]; then
+	for i in flex lex; do
+		OLDIFS="$IFS"
+		IFS=":"
+	
+		for j in $PATH; do
+			if [ -f $j/$i ]; then
+				LEX=$j/$i
+				break
+			fi
+		done
+	
+		IFS="$OLDIFS"
+		if [ ! "x$LEX" = "x" ]; then
+			break
+		fi
+	done
+fi
+if [ "x$LEX" = "x" ]; then
+	echo "not found"
+	quit
+fi
+echo "$LEX"
+
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
 echo "CFLAGS = $CFLAGS -ansi -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\"" >> config.mk
@@ -241,6 +266,7 @@ echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
 echo "EXEC = $EXEC" >> config.mk
 echo "YACC = $YACC" >> config.mk
+echo "LEX = $LEX" >> config.mk
 
 log ""
 log "Configuration successful, now run \`make\'"
