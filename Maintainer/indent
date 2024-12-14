@@ -7,7 +7,7 @@ for i in $DIRS; do
 	echo "--- $i"
 	for j in `ls -d $i/*.c $i/*.h 2>/dev/null`; do
 		echo "----- $j"
-		indent -npro -lpl -lp -cdb -bad $j
+		indent -npro -lpl -lp -bbb -bad $j
 	done
 done
 rm -f *.BAK
