@@ -7,8 +7,7 @@
 #include <string.h>
 
 int
-main(int argc, char **argv)
-{
+main(int argc, char **argv) {
 	int		i;
 
 	printf("NewsDist NNTP daemon - NewsDist/%s\n", NEWSDIST_VERSION);
