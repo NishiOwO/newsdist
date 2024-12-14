@@ -2,7 +2,7 @@
 
 include $(TOPDIR)/config.mk
 
-OBJS = main.o
+OBJS = main.o yconf.tab.o
 
 .PHONY: all clean
 .SUFFIXES: .c .o
@@ -15,5 +15,8 @@ newsdist$(EXEC): $(OBJS)
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
 
+yconf.tab.c: config.y
+	$(YACC) -d -b yconf config.y
+
 clean:
-	rm -f *.o *.exe newsdist
+	rm -f *.o *.exe newsdist *.tab.*

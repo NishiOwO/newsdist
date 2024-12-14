@@ -3,11 +3,20 @@
 
 . ./Maintainer/tools.sh
 
+ERRORS=0
 for i in $DIRS; do
 	echo "--- $i"
 	for j in `ls -d $i/*.c $i/*.h 2>/dev/null`; do
 		echo "----- $j"
 		indent -npro -lpl -lp -bbb -bad -nfbs $j
+		if [ ! "$?" = "0" ]; then
+			ERRORS=$(($ERRORS + 1))
+		fi
 	done
 done
 rm -f *.BAK
+echo
+echo "$ERRORS error(s)"
+if [ "$ERRORS" -gt 0 ]; then
+	exit 1
+fi

@@ -1,6 +1,6 @@
 # $Id$
 
-.PHONY: all distclean ling clean ./Server config
+.PHONY: all distclean ling clean ./Server config maintainer
 
 DIRS = ./Server
 
@@ -14,6 +14,10 @@ all: $(DIRS)
 
 ./Server:: config
 	$(MAKE) -C $@ $(FLAGS)
+
+maintainer:
+	./Maintainer/lint
+	./Maintainer/indent
 
 config:
 	@$(CACHED) test -f Config/$(PLATFORM) || echo "Seems like config file for your platform does not exist, so I will ask you questions" $(END)

@@ -195,6 +195,44 @@ fi
 
 echo "#endif" >> config.h
 
+log_raw "Finding yacc: "
+if [ "x$YACC" = "x" ]; then
+	for i in byacc bison yacc; do
+		OLDIFS="$IFS"
+		IFS=":"
+	
+		for j in $PATH; do
+			if [ -f $j/$i ]; then
+				YACC=$j/$i
+				break
+			fi
+		done
+	
+		IFS="$OLDIFS"
+		if [ ! "x$YACC" = "x" ]; then
+			break
+		fi
+	done
+fi
+if [ "x$YACC" = "x" ]; then
+	echo "not found"
+	quit
+fi
+echo "$YACC"
+
+log_raw "Should I force -y to Yacc: "
+echo "%%" > /tmp/test.y
+echo "a: 'a'" >> /tmp/test.y
+echo "%%" >> /tmp/test.y
+$YACC -y /tmp/test.y >/dev/null 2>&1
+if [ "$?" = "0" ]; then
+	echo "yes"
+	YACC="$YACC -y"
+else
+	echo "no"
+fi
+rm -f y.tab.c /tmp/test.y
+
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
 echo "CFLAGS = $CFLAGS -ansi -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\"" >> config.mk
@@ -202,6 +240,7 @@ echo "LDFLAGS = $LDFLAGS -O2" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
 echo "EXEC = $EXEC" >> config.mk
+echo "YACC = $YACC" >> config.mk
 
 log ""
 log "Configuration successful, now run \`make\'"
