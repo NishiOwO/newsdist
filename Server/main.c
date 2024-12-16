@@ -32,15 +32,15 @@ main(int argc, char **argv)
 
 				printf("Configuration:\n");
 				for (j = 0; j < sizeof(defines) / sizeof(defines[0]); j++) {
-					if ((j % 5) == 0)
+					if ((j % 3) == 0)
 						printf("    ");
 					printf("%s", defines[j]);
-					for (k = 0; k < 15 - strlen(defines[j]); k++)
+					for (k = 0; k < 20 - strlen(defines[j]); k++)
 						printf(" ");
-					if ((j + 1) % 5 == 0)
+					if ((j + 1) % 3 == 0)
 						printf("\n");
 				}
-				if ((j + 1) % 5 != 0)
+				if (j % 3 != 0)
 					printf("\n");
 				return 0;
 			} else if (strcmp(argv[i], "--config") == 0 || strcmp(argv[i], "-C") == 0) {

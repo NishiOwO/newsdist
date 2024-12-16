@@ -123,11 +123,20 @@ DEFINES=""
 
 define () {
 	if [ "x$DEFINES" = "x" ]; then
-		DEFINES="\"$1\""
+		DEFINES="\"+$1\""
 	else
-		DEFINES="$DEFINES,\"$1\""
+		DEFINES="$DEFINES,\"+$1\""
 	fi
 	echo "#define $1" >> config.h
+}
+
+undef () {
+	if [ "x$DEFINES" = "x" ]; then
+		DEFINES="\"-$1\""
+	else
+		DEFINES="$DEFINES,\"-$1\""
+	fi
+	echo "/* #define $1 */" >> config.h
 }
 
 trap quit 2
@@ -157,6 +166,8 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 	SELECT_H="winsock2.h"
 	POLL_H="winsock2.h"
 	SOCKET_H="winsock2.h"
+else
+	undef "HAS_WINSOCK"
 fi
 
 log_raw "Is this Linux build: "
@@ -166,10 +177,14 @@ fi
 log_raw "Checking if select exists: "
 if test_c "#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
 	define "HAS_SELECT"
+else
+	undef "HAS_SELECT"
 fi
 log_raw "Checking if poll exists: "
 if test_c "#include <$POLL_H>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
 	define "HAS_POLL"
+else
+	undef "HAS_POLL"
 fi
 log_raw "Checking if AF_INET exists: "
 test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
@@ -177,6 +192,8 @@ test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;retu
 log_raw "Checking if strdup exists: "
 if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
 	define "HAS_STRDUP"
+else
+	undef "HAS_STRDUP"
 fi
 
 log_raw "Checking if OpenSSL works: "
@@ -188,38 +205,61 @@ if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlo
 	log_raw "Checking if LOG_PID exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PID;return 0;}"; then
 		define "HAS_LOG_PID"
+	else
+		undef "HAS_LOG_PID"
 	fi
 	log_raw "Checking if LOG_PERROR exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PERROR;return 0;}"; then
 		define "HAS_LOG_PERROR"
+	else
+		undef "HAS_LOG_PERROR"
 	fi
 	log_raw "Checking if LOG_NEWS exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NEWS;return 0;}"; then
 		define "HAS_LOG_NEWS"
 	else
-		log_raw "Checking if LOG_USER exists: "
-		if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_USER;return 0;}"; then
-			define "HAS_LOG_USER"
-		fi
+		undef "HAS_LOG_NEWS"
+	fi
+	log_raw "Checking if LOG_USER exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_USER;return 0;}"; then
+		define "HAS_LOG_USER"
+	else
+		undef "HAS_LOG_USER"
 	fi
 	log_raw "Checking if LOG_INFO exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_INFO;return 0;}"; then
 		define "HAS_LOG_INFO"
+	else
+		undef "HAS_LOG_INFO"
 	fi
 	log_raw "Checking if LOG_NOTICE exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NOTICE;return 0;}"; then
 		define "HAS_LOG_NOTICE"
 	else
-		log_raw "Checking if LOG_WARNING exists: "
-		if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_WARNING;return 0;}"; then
-			define "HAS_LOG_WARNING"
-		fi
+		undef "HAS_LOG_NOTICE"
 	fi
+	log_raw "Checking if LOG_WARNING exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_WARNING;return 0;}"; then
+		define "HAS_LOG_WARNING"
+	else
+		undef "HAS_LOG_WARNING"
+	fi
+else
+	undef "HAS_SYSLOG"
+	undef "HAS_LOG_PID"
+	undef "HAS_LOG_PERROR"
+	undef "HAS_LOG_NEWS"
+	undef "HAS_LOG_USER"
+	undef "HAS_LOG_INFO"
+	undef "HAS_LOG_NOTICE"
+	undef "HAS_LOG_WARNING"
 fi
 
 log_raw "Checking if fork exists: "
 if test_c "#include <unistd.h>\nint main(int argc, char** argv){void* s = fork;return 0;}"; then
 	define "HAS_FORK"
+else
+	undef "HAS_FORK"
 fi
 
 echo "#define DEFINES {$DEFINES}" >> config.h
