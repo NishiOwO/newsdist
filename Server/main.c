@@ -26,17 +26,22 @@ main(int argc, char **argv)
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
 			if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-V") == 0) {
-				const char* defines[] = DEFINES;
-				int j;
-				int k;
+				const char     *defines[] = DEFINES;
+				int		j;
+				int		k;
+
 				printf("Configuration:\n");
-				for(j = 0; j < sizeof(defines) / sizeof(defines[0]); j++){
-					if((j % 5) == 0) printf("    ");
+				for (j = 0; j < sizeof(defines) / sizeof(defines[0]); j++) {
+					if ((j % 5) == 0)
+						printf("    ");
 					printf("%s", defines[j]);
-					for(k = 0; k < 15 - strlen(defines[j]); k++) printf(" ");
-					if((j + 1) % 5 == 0) printf("\n");
+					for (k = 0; k < 15 - strlen(defines[j]); k++)
+						printf(" ");
+					if ((j + 1) % 5 == 0)
+						printf("\n");
 				}
-				if((j + 1) % 5 != 0) printf("\n");
+				if ((j + 1) % 5 != 0)
+					printf("\n");
 				return 0;
 			} else if (strcmp(argv[i], "--config") == 0 || strcmp(argv[i], "-C") == 0) {
 				confpath = argv[(long)i + 1];
