@@ -66,6 +66,6 @@ main(int argc, char **argv)
 	}
 	fclose(yyconfin);
 	nd_init_log();
-	nd_init_server();
+	if(nd_init_server() != 0) return 1;
 	return 0;
 }

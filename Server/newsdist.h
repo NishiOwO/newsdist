@@ -12,6 +12,6 @@ void		nd_log_info(const char *info);
 void		nd_log_notice(const char *info);
 
 /* server.c */
-void		nd_init_server(void);
+int		nd_init_server(void);
 
 #endif

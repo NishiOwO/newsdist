@@ -20,7 +20,7 @@ yconf.tab.c: config.y
 	$(YACC) -p yyconf -d -b yconf config.y
 
 yconf.yy.c: config.l yconf.tab.c
-	$(LEX) -P yyconf -t config.l > $@ || rm -f $@
+	$(LEX) -P yyconf -t config.l > $@ || ( rm -f $@ ; exit 1 )
 
 clean:
 	rm -f *.o *.exe newsdist *.tab.* *.yy.*
