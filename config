@@ -119,6 +119,17 @@ test_c () {
 	return $result
 }
 
+DEFINES=""
+
+define () {
+	if [ "x$DEFINES" = "x" ]; then
+		DEFINES="\"$1\""
+	else
+		DEFINES="$DEFINES,\"$1\""
+	fi
+	echo "#define $1" >> config.h
+}
+
 trap quit 2
 
 log ""
@@ -151,10 +162,10 @@ if [ "$WINSOCK" = "y" ]; then
 	LIBS="$LIBS -lws2_32"
 	EXEC=".exe"
 	log "Guessing this is Windows build"
-	echo "#define USE_WINSOCK" >> config.h
+	define "USE_WINSOCK"
 	log_raw "Checking if select exists: "
 	test_c "#include <winsock2.h>\nint main(int argc, char** argv){void* s = select;return 0;}" || quit
-	echo "#define HAS_SELECT" >> config.h
+	define "HAS_SELECT"
 	log_raw "Checking if AF_INET exists: "
 	test_c "#include <winsock2.h>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
 else
@@ -164,11 +175,11 @@ else
 	fi
 	log_raw "Checking if select exists: "
 	if test_c "#include <sys/select.h>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
-		echo "#define HAS_SELECT" >> config.h
+		define "HAS_SELECT"
 	fi
 	log_raw "Checking if poll exists: "
 	if test_c "#include <sys/poll.h>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
-		echo "#define HAS_POLL" >> config.h
+		define "HAS_POLL"
 	fi
 	log_raw "Checking if AF_INET exists: "
 	test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
@@ -176,7 +187,7 @@ fi
 
 log_raw "Checking if strdup exists: "
 if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
-	echo "#define HAS_STRDUP" >> config.h
+	define "HAS_STRDUP"
 fi
 
 while [ ! "x$OPENSSL" = "xno" -a ! "x$OPENSSL" = "xyes" -a ! "x$OPENSSL" = "xn" -a ! "x$OPENSSL" = "xy" ]; do
@@ -193,43 +204,50 @@ fi
 if [ "$OPENSSL" = "y" ]; then
 	log_raw "Checking if OpenSSL works: "
 	test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl" || quit
-	echo "#define HAS_OPENSSL" >> config.h
+	define "HAS_OPENSSL"
 fi
 
 log_raw "Checking if openlog exists: "
 if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlog;return 0;}"; then
-	echo "#define HAS_SYSLOG" >> config.h
+	define "HAS_SYSLOG"
 	log_raw "Checking if LOG_PID exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PID;return 0;}"; then
-		echo "#define HAS_LOG_PID" >> config.h
+		define "HAS_LOG_PID"
 	fi
 	log_raw "Checking if LOG_PERROR exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PERROR;return 0;}"; then
-		echo "#define HAS_LOG_PERROR" >> config.h
+		define "HAS_LOG_PERROR"
 	fi
 	log_raw "Checking if LOG_NEWS exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NEWS;return 0;}"; then
-		echo "#define HAS_LOG_NEWS" >> config.h
+		define "HAS_LOG_NEWS"
 	else
 		log_raw "Checking if LOG_USER exists: "
 		if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_USER;return 0;}"; then
-			echo "#define HAS_LOG_USER" >> config.h
+			define "HAS_LOG_USER"
 		fi
 	fi
 	log_raw "Checking if LOG_INFO exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_INFO;return 0;}"; then
-		echo "#define HAS_LOG_INFO" >> config.h
+		define "HAS_LOG_INFO"
 	fi
 	log_raw "Checking if LOG_NOTICE exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NOTICE;return 0;}"; then
-		echo "#define HAS_LOG_NOTICE" >> config.h
+		define "HAS_LOG_NOTICE"
 	else
 		log_raw "Checking if LOG_WARNING exists: "
 		if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_WARNING;return 0;}"; then
-			echo "#define HAS_LOG_WARNING" >> config.h
+			define "HAS_LOG_WARNING"
 		fi
 	fi
 fi
+
+log_raw "Checking if fork exists: "
+if test_c "#include <unistd.h>\nint main(int argc, char** argv){void* s = fork;return 0;}"; then
+	define "HAS_FORK"
+fi
+
+echo "#define DEFINES {$DEFINES}" >> config.h
 
 echo "#endif" >> config.h
 
