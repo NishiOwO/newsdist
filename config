@@ -197,7 +197,11 @@ else
 fi
 
 log_raw "Checking if OpenSSL works: "
-test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl" && define "HAS_OPENSSL"
+if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl"; then
+	define "HAS_OPENSSL"
+else
+	undef "HAS_OPENSSL"
+fi
 
 log_raw "Checking if openlog exists: "
 if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlog;return 0;}"; then
