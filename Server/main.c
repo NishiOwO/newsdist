@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "newsdist.h"
+
 char	       *confpath = PREFIX "/etc/newsdist.conf";
 
 int		yyconfparse(void);
@@ -45,5 +47,6 @@ main(int argc, char **argv)
 		return 1;
 	}
 	fclose(yyconfin);
+	nd_init_log();
 	return 0;
 }

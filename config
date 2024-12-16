@@ -144,7 +144,7 @@ elif [ "x$WINSOCK" = "xno" ]; then
 fi
 
 echo "/* This file is auto-generated */" > config.h
-echo "#ifdef __NEWSDIST_CONFIG_H__" >> config.h
+echo "#ifndef __NEWSDIST_CONFIG_H__" >> config.h
 echo "#define __NEWSDIST_CONFIG_H__" >> config.h
 
 if [ "$WINSOCK" = "y" ]; then
@@ -210,10 +210,24 @@ if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlo
 	log_raw "Checking if LOG_NEWS exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NEWS;return 0;}"; then
 		echo "#define HAS_LOG_NEWS" >> config.h
+	else
+		log_raw "Checking if LOG_USER exists: "
+		if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_USER;return 0;}"; then
+			echo "#define HAS_LOG_USER" >> config.h
+		fi
 	fi
-	log_raw "Checking if LOG_USER exists: "
-	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_USER;return 0;}"; then
-		echo "#define HAS_LOG_USER" >> config.h
+	log_raw "Checking if LOG_INFO exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_INFO;return 0;}"; then
+		echo "#define HAS_LOG_INFO" >> config.h
+	fi
+	log_raw "Checking if LOG_NOTICE exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NOTICE;return 0;}"; then
+		echo "#define HAS_LOG_NOTICE" >> config.h
+	else
+		log_raw "Checking if LOG_WARNING exists: "
+		if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_WARNING;return 0;}"; then
+			echo "#define HAS_LOG_WARNING" >> config.h
+		fi
 	fi
 fi
 
