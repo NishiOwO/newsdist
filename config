@@ -153,29 +153,29 @@ if [ "$WINSOCK" = "y" ]; then
 	log "Guessing this is Windows build"
 	echo "#define USE_WINSOCK" >> config.h
 	log_raw "Checking if select exists: "
-	test_c "#include <winsock2.h>\nint main(int argc, char** argv){void* s = select;}" || quit
+	test_c "#include <winsock2.h>\nint main(int argc, char** argv){void* s = select;return 0;}" || quit
 	echo "#define HAS_SELECT" >> config.h
 	log_raw "Checking if AF_INET exists: "
-	test_c "#include <winsock2.h>\nint main(int argc, char** argv){(void)AF_INET;}" || quit
+	test_c "#include <winsock2.h>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
 else
 	log_raw "Is this Linux build: "
 	if test_c "#ifndef __linux__\n#error no\n#endif"; then
 		CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
 	fi
 	log_raw "Checking if select exists: "
-	if test_c "#include <sys/select.h>\nint main(int argc, char** argv){void* s = select;}"; then
+	if test_c "#include <sys/select.h>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
 		echo "#define HAS_SELECT" >> config.h
 	fi
 	log_raw "Checking if poll exists: "
-	if test_c "#include <sys/poll.h>\nint main(int argc, char** argv){void* s = poll;}"; then
+	if test_c "#include <sys/poll.h>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
 		echo "#define HAS_POLL" >> config.h
 	fi
 	log_raw "Checking if AF_INET exists: "
-	test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;}" || quit
+	test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
 fi
 
 log_raw "Checking if strdup exists: "
-if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;}"; then
+if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
 	echo "#define HAS_STRDUP" >> config.h
 fi
 
@@ -192,8 +192,29 @@ fi
 
 if [ "$OPENSSL" = "y" ]; then
 	log_raw "Checking if OpenSSL works: "
-	test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;}" "-lcrypto -lssl" || quit
+	test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl" || quit
 	echo "#define HAS_OPENSSL" >> config.h
+fi
+
+log_raw "Checking if openlog exists: "
+if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlog;return 0;}"; then
+	echo "#define HAS_SYSLOG" >> config.h
+	log_raw "Checking if LOG_PID exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PID;return 0;}"; then
+		echo "#define HAS_LOG_PID" >> config.h
+	fi
+	log_raw "Checking if LOG_PERROR exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PERROR;return 0;}"; then
+		echo "#define HAS_LOG_PERROR" >> config.h
+	fi
+	log_raw "Checking if LOG_NEWS exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NEWS;return 0;}"; then
+		echo "#define HAS_LOG_NEWS" >> config.h
+	fi
+	log_raw "Checking if LOG_USER exists: "
+	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_USER;return 0;}"; then
+		echo "#define HAS_LOG_USER" >> config.h
+	fi
 fi
 
 echo "#endif" >> config.h

@@ -6,9 +6,9 @@
 ERRORS=0
 for i in $DIRS; do
 	echo "--- $i"
-	for j in `list $i`; do
+	for j in `list $i` `list_header $i`; do
 		echo "----- $j"
-		indent -npro -lpl -lp -bbb -bad -nfbs $j
+		indent -npro -lpl -lp -bbb -bad $j
 		if [ ! "$?" = "0" ]; then
 			ERRORS=$(($ERRORS + 1))
 		fi

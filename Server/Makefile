@@ -2,7 +2,8 @@
 
 include $(TOPDIR)/config.mk
 
-OBJS = main.o yconf.tab.o yconf.yy.o
+OBJS  = main.o log.o
+OBJS += yconf.tab.o yconf.yy.o
 
 .PHONY: all clean
 .SUFFIXES: .c .o
