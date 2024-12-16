@@ -1,6 +1,9 @@
 #!/bin/sh
 # $Id$
 
+if [ "x$PREFIX" = "x" ]; then
+	PREFIX="/usr/local"
+fi
 VERSION="1.0"
 
 stty -echo
@@ -260,7 +263,7 @@ echo "$LEX"
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
-echo "CFLAGS = $CFLAGS -ansi -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\"" >> config.mk
+echo "CFLAGS = $CFLAGS -ansi -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\"" >> config.mk
 echo "LDFLAGS = $LDFLAGS -O2" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk

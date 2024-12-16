@@ -6,7 +6,7 @@
 ERRORS=0
 for i in $DIRS; do
 	echo "--- $i"
-	for j in `ls -d $i/*.c $i/*.h 2>/dev/null`; do
+	for j in `list $i`; do
 		echo "----- $j"
 		indent -npro -lpl -lp -bbb -bad -nfbs $j
 		if [ ! "$?" = "0" ]; then

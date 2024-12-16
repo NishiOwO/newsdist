@@ -4,16 +4,20 @@
  */
 
 %{
-int yyconflex();
+int yyconflex(void);
 int yyconferror(const char*);
 %}
 
-%start statement_list
+%start list
 %token NEWLINE STRING SPACES
+%token WELCOME
 
 %%
 
-statement_list	: statement
-		| statement_list statement_list;
+list		: component
+		| list component;
+
+component	: WELCOME SPACES STRING NEWLINE
+		| NEWLINE;
 
 %%
