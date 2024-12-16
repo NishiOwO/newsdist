@@ -20,7 +20,7 @@ maintainer:
 	./Maintainer/indent
 
 config:
-	@$(CACHED) test -f Config/$(PLATFORM) || echo "Seems like config file for your platform does not exist, so I will ask you questions" $(END)
+	@$(CACHED) test -f Config/$(PLATFORM) || echo "Seems like config file for your platform does not exist" $(END)
 	@$(CACHED) ./config `test -f Config/$(PLATFORM) && echo Config/$(PLATFORM)` $(END)
 	@$(CACHED) $(MAKE) clean $(END)
 	@$(CACHED) echo $(PLATFORM) > config.cache $(END)
