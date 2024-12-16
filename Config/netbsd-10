@@ -1,3 +1,2 @@
 # $Id$
 CC=cc
-WINSOCK=n

@@ -143,47 +143,36 @@ if [ "x$CC" = "x" ]; then
 	CC="$input"
 fi
 
-while [ ! "x$WINSOCK" = "xno" -a ! "x$WINSOCK" = "xyes" -a ! "x$WINSOCK" = "xn" -a ! "x$WINSOCK" = "xy" ]; do
-	getinput "Do you need WinSock" "n"
-	WINSOCK="`echo "$input" | tr '[:upper:]' '[:lower:]'`"
-done
-
-if [ "x$WINSOCK" = "xyes" ]; then
-	WINSOCK="y"
-elif [ "x$WINSOCK" = "xno" ]; then
-	WINSOCK="n"
-fi
-
 echo "/* This file is auto-generated */" > config.h
 echo "#ifndef __NEWSDIST_CONFIG_H__" >> config.h
 echo "#define __NEWSDIST_CONFIG_H__" >> config.h
 
-if [ "$WINSOCK" = "y" ]; then
-	LIBS="$LIBS -lws2_32"
-	EXEC=".exe"
-	log "Guessing this is Windows build"
-	define "USE_WINSOCK"
-	log_raw "Checking if select exists: "
-	test_c "#include <winsock2.h>\nint main(int argc, char** argv){void* s = select;return 0;}" || quit
-	define "HAS_SELECT"
-	log_raw "Checking if AF_INET exists: "
-	test_c "#include <winsock2.h>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
-else
-	log_raw "Is this Linux build: "
-	if test_c "#ifndef __linux__\n#error no\n#endif"; then
-		CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
-	fi
-	log_raw "Checking if select exists: "
-	if test_c "#include <sys/select.h>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
-		define "HAS_SELECT"
-	fi
-	log_raw "Checking if poll exists: "
-	if test_c "#include <sys/poll.h>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
-		define "HAS_POLL"
-	fi
-	log_raw "Checking if AF_INET exists: "
-	test_c "#include <sys/socket.h>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
+SELECT_H="sys/select.h"
+POLL_H="sys/poll.h"
+SOCKET_H="sys/socket.h"
+
+log_raw "Checking if Winsock 2 exists: "
+if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; then
+	define "HAS_WINSOCK"
+	SELECT_H="winsock2.h"
+	POLL_H="winsock2.h"
+	SOCKET_H="winsock2.h"
 fi
+
+log_raw "Is this Linux build: "
+if test_c "#ifndef __linux__\n#error no\n#endif"; then
+	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
+fi
+log_raw "Checking if select exists: "
+if test_c "#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
+	define "HAS_SELECT"
+fi
+log_raw "Checking if poll exists: "
+if test_c "#include <$POLL_H>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
+	define "HAS_POLL"
+fi
+log_raw "Checking if AF_INET exists: "
+test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
 
 log_raw "Checking if strdup exists: "
 if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
@@ -311,7 +300,7 @@ echo "YACC = $YACC" >> config.mk
 echo "LEX = $LEX" >> config.mk
 
 log ""
-log "Configuration successful, now run \`make\'"
+log "Configuration successful, now run \`make'"
 log ""
 
 stty echo
