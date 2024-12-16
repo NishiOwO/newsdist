@@ -27,23 +27,43 @@ done
 IFS="$OLDIFS"
 
 input=""
+COLOR=1
 
-$PRINTF "\x1b[m"
+$PRINTF "\x1b[m" 2>/dev/null
+if [ ! "$?" = "0" ]; then
+	COLOR=0
+fi
 
 error_raw () {
-	$PRINTF "\x1b[1m\x1b[31m!!!\x1b[m $1"
+	if [ "$COLOR" = "1" ]; then
+		$PRINTF "\x1b[1m\x1b[31m!!!\x1b[m $1"
+	else
+		$PRINTF "!!! $1"
+	fi
 }
 
 warn_raw () {
-	$PRINTF "\x1b[1m\x1b[33m!!!\x1b[m $1"
+	if [ "$COLOR" = "1" ]; then
+		$PRINTF "\x1b[1m\x1b[33m!!!\x1b[m $1"
+	else
+		$PRINTF "!!! $1"
+	fi
 }
 
 info_raw () {
-	$PRINTF "\x1b[1m\x1b[37m???\x1b[m $1"
+	if [ "$COLOR" = "1" ]; then
+		$PRINTF "\x1b[1m\x1b[37m???\x1b[m $1"
+	else
+		$PRINTF "??? $1"
+	fi
 }
 
 log_raw () {
-	$PRINTF "\x1b[1m\x1b[37m   \x1b[m $1"
+	if [ "$COLOR" = "1" ]; then
+		$PRINTF "\x1b[1m\x1b[37m   \x1b[m $1"
+	else
+		$PRINTF "    $1"
+	fi
 }
 
 error () {
@@ -75,9 +95,17 @@ getinput () {
 	default="$2"
 	while true; do
 		if [ "x$2" = "x" ]; then
-			$PRINTF "\x1b[1m\x1b[34m???\x1b[m $1? "
+			if [ "$COLOR" = "1" ]; then
+				$PRINTF "\x1b[1m\x1b[34m???\x1b[m $1? "
+			else
+				$PRINTF "??? $1? "
+			fi
 		else
-			$PRINTF "\x1b[1m\x1b[34m???\x1b[m $1 [$default]? "
+			if [ "$COLOR" = "1" ]; then
+				$PRINTF "\x1b[1m\x1b[34m???\x1b[m $1 [$default]? "
+			else
+				$PRINTF "??? $1 [$default]? "
+			fi
 		fi
 		stty echo
 		read input || quit
