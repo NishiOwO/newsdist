@@ -190,22 +190,8 @@ if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup
 	define "HAS_STRDUP"
 fi
 
-while [ ! "x$OPENSSL" = "xno" -a ! "x$OPENSSL" = "xyes" -a ! "x$OPENSSL" = "xn" -a ! "x$OPENSSL" = "xy" ]; do
-	getinput "Do you want an OpenSSL" "y"
-	OPENSSL="`echo "$input" | tr '[:upper:]' '[:lower:]'`"
-done
-
-if [ "x$OPENSSL" = "xyes" ]; then
-	OPENSSL="y"
-elif [ "x$OPENSSL" = "xno" ]; then
-	OPENSSL="n"
-fi
-
-if [ "$OPENSSL" = "y" ]; then
-	log_raw "Checking if OpenSSL works: "
-	test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl" || quit
-	define "HAS_OPENSSL"
-fi
+log_raw "Checking if OpenSSL works: "
+test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl" && define "HAS_OPENSSL"
 
 log_raw "Checking if openlog exists: "
 if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlog;return 0;}"; then
