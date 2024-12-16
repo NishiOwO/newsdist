@@ -39,7 +39,7 @@
 #ifdef LOG_FACILITY
 #ifdef HAS_LOG_INFO
 #ifdef LOG_NOTICE_LEVEL
-/* #define USE_SYSTEM_SYSLOG */
+#define USE_SYSTEM_SYSLOG
 #endif
 #endif
 #endif
