@@ -14,4 +14,4 @@ all: ../README ../README.build ../README.md ../README.build.md
 	cat README.build.in | sed -E 's/^# *//g' | sed "s/@DATE@/`date +'%b %Y'`/g" | fold -s > $@
 
 ../README.build.md: README.build.in
-	cat README.build.in | sed -E 's/Note: /\n   /g' | sed "s/@DATE@//g" > $@
+	cat README.build.in | sed -E 's/Note: /\n   Note: /g' | sed "s/@DATE@//g" > $@
