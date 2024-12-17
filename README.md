@@ -1,6 +1,7 @@
-# Source distribution of NewsDist                                        @DATE@
+# Source distribution of NewsDist
 
-This distribution contains the source code of NewsDist: the public-domain NNTP server.
+This distribution contains the source code of NewsDist: the public-domain NNTP 
+server.
 The distribution can be fetched using:
  - Subversion : http://svn.nishi.boats/repo/newsdist
  - Git        : https://github.com/nishiowo/newsdist
