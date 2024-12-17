@@ -5,6 +5,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "newsdist.h"
 
@@ -19,8 +20,10 @@ int
 main(int argc, char **argv)
 {
 	int		i;
+	char	       *buffer;
 
-	printf("NewsDist NNTP daemon - NewsDist/%s\n", NEWSDIST_VERSION);
+	printf("NewsDist NNTP daemon - NewsDist/%s, system = %s\n", NEWSDIST_VERSION, (buffer = nd_get_system()));
+	free(buffer);
 	printf("Under public-domain, original by Nishi <nishi@nishi.boats>.\n");
 	printf("\n");
 	for (i = 1; i < argc; i++) {

@@ -34,10 +34,10 @@ nd_get_system(void)
 	char	       *name = malloc(512);
 
 	name[0] = 0;
+	uname(&u);
 	strcat(name, u.sysname);
 	strcat(name, "/");
 	strcat(name, u.release);
-	uname(&u);
 	return name;
 #else
 #ifdef __MINGW32__
