@@ -7,6 +7,8 @@ NewsDist currently supports these platforms:
  - SCO OpenServer     (Checked working on 5.0.7)
    Note: You can pass `Config/sco_sv-3' to `./config' to build for this
          platform.
+   Note: You will have to build Berkeley Yacc and recent Flex to get it
+         working.
  - Debian GNU/Linux   (Checked working on x86_64 12)
    Note: You can pass `Config/linux-6' to `./config' to build for this
          platform.
