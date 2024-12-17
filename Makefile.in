@@ -1,0 +1,28 @@
+# $Id$
+
+.PHONY: all distclean clean ./Server maintainer
+
+DIRS = ./Server
+
+FLAGS = TOPDIR=..
+
+all: $(DIRS)
+
+./Server::
+	$(MAKE) -C $@ $(FLAGS)
+
+maintainer:
+	./Maintainer/lint
+	./Maintainer/indent
+
+clean:
+	for i in $(DIRS); do \
+		$(MAKE) -C $$i clean $(FLAGS) ; \
+	done
+
+distclean:
+	touch config.mk
+	for i in $(DIRS); do \
+		$(MAKE) -C $$i clean $(FLAGS) ; \
+	done
+	rm -f config.h config.mk config.cache Makefile

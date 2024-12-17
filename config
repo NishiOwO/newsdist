@@ -433,6 +433,8 @@ echo "EXEC = $EXEC" >> config.mk
 echo "YACC = $YACC" >> config.mk
 echo "LEX = $LEX" >> config.mk
 
+cp Makefile.in Makefile
+
 log ""
 log "Configuration successful, now run \`make'"
 log ""
