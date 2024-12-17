@@ -15,10 +15,10 @@
 const char     *nd_sslver = OPENSSL_VERSION_TEXT;
 #endif
 
-#ifdef HAS_OPENSSL
-const		SSL_METHOD *
+const void *
 nd_create_method(void)
 {
+#ifdef HAS_OPENSSL
 #if defined(HAS_TLS_SERVER_METHOD)
 	return TLS_server_method();
 #elif defined(HAS_SSLV23_SERVER_METHOD)
@@ -34,8 +34,10 @@ nd_create_method(void)
 #else
 	return NULL;
 #endif
-}
+#else
+	return NULL;
 #endif
+}
 
 const char *
 nd_get_ssl_version(void)

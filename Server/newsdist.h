@@ -15,6 +15,7 @@ void		nd_log_notice(const char *info);
 int		nd_init_server(void);
 
 /* socket.c */
+const void *	nd_create_method(void);
 const char *	nd_get_ssl_version(void);
 
 /* util.c */
