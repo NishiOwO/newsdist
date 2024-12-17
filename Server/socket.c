@@ -11,7 +11,7 @@
 
 #ifdef HAS_OPENSSL
 #include <openssl/opensslv.h>
-const char* nd_sslver = OPENSSL_VERSION_TEXT;
+const char     *nd_sslver = OPENSSL_VERSION_TEXT;
 #endif
 
 const char *
