@@ -29,7 +29,7 @@ nd_strdup(const char *str)
 char *
 nd_get_system(void)
 {
-#ifdef HAS_UNAME
+#if defined(HAS_UNAME)
 	struct utsname	u;
 	char	       *name = malloc(512);
 
@@ -39,11 +39,9 @@ nd_get_system(void)
 	strcat(name, "/");
 	strcat(name, u.release);
 	return name;
-#else
-#ifdef __MINGW32__
+#elif defined(__MINGW32__)
 	return nd_strdup("Windows");
 #else
 	return nd_strdup("Unknown");
-#endif
 #endif
 }

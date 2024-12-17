@@ -13,35 +13,26 @@
 #include <syslog.h>
 #endif
 
-#ifndef HAS_LOG_PID
+#if !defined(HAS_LOG_PID)
 #define LOG_PID 0
-#endif
-#ifndef HAS_LOG_PERROR
+#elif !defined(HAS_LOG_PERROR)
 #define LOG_PERROR 0
 #endif
 
-#ifdef HAS_LOG_NEWS
+#if defined(HAS_LOG_NEWS)
 #define LOG_FACILITY LOG_NEWS
-#else
-#ifdef HAS_LOG_USER
+#elif defined(HAS_LOG_USER)
 #define LOG_FACILITY LOG_USER
 #endif
-#endif
 
-#ifdef HAS_LOG_NOTICE
+#if defined(HAS_LOG_NOTICE)
 #define LOG_NOTICE_LEVEL LOG_NOTICE
-#else
-#ifdef HAS_LOG_WARNING
+#elif defined(HAS_LOG_WARNING)
 #define LOG_NOTICE_LEVEL LOG_WARNING
 #endif
-#endif
 
-#ifdef LOG_FACILITY
-#ifdef HAS_LOG_INFO
-#ifdef LOG_NOTICE_LEVEL
+#if defined(LOG_FACILITY) && defined(HAS_LOG_INFO) && defined(LOG_NOTICE_LEVEL)
 #define USE_SYSTEM_SYSLOG
-#endif
-#endif
 #endif
 
 void

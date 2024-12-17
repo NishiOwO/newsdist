@@ -9,7 +9,7 @@ for i in $DIRS; do
 	echo "--- $i"
 	for j in `list $i`; do
 		echo "----- $j"
-		lint -X 49,233,236,265 -Ppnus -D__inline= -Drestrict= -D__attribute__\(x\)= $CFLAGS  $j
+		lint -X 49,233,234,236,265 -Ppnus -D_Noreturn= -D__inline= -Drestrict= -D__attribute__\(x\)= -Dinline= $CFLAGS  $j
 		if [ ! "$?" = "0" ]; then
 			ERRORS=$(($ERRORS + 1))
 		fi

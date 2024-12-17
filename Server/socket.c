@@ -11,7 +11,30 @@
 
 #ifdef HAS_OPENSSL
 #include <openssl/opensslv.h>
+#include <openssl/ssl.h>
 const char     *nd_sslver = OPENSSL_VERSION_TEXT;
+#endif
+
+#ifdef HAS_OPENSSL
+const		SSL_METHOD *
+nd_create_method(void)
+{
+#if defined(HAS_TLS_SERVER_METHOD)
+	return TLS_server_method();
+#elif defined(HAS_SSLV23_SERVER_METHOD)
+	return SSLv23_server_method();
+#elif defined(HAS_TLSV1_2_SERVER_METHOD)
+	return TLSv1_2_server_method();
+#elif defined(HAS_TLSV1_1_SERVER_METHOD)
+	return TLSv1_1_server_method();
+#elif defined(HAS_SSLV3_SERVER_METHOD)
+	return SSLv3_server_method();
+#elif defined(HAS_SSLV2_SERVER_METHOD)
+	return SSLv2_server_method();
+#else
+	return NULL;
+#endif
+}
 #endif
 
 const char *
