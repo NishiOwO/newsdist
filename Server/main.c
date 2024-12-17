@@ -32,13 +32,17 @@ main(int argc, char **argv)
 				const char     *defines[] = DEFINES;
 				int		j;
 				int		k;
+				int maxlen = 0;
 
 				printf("Configuration:\n");
+				for (j = 0; j < sizeof(defines) / sizeof(defines[0]); j++) {
+					if((strlen(defines[j]) + 1) > maxlen) maxlen = strlen(defines[j]) + 1;
+				}
 				for (j = 0; j < sizeof(defines) / sizeof(defines[0]); j++) {
 					if ((j % 3) == 0)
 						printf("    ");
 					printf("%s", defines[j]);
-					for (k = 0; k < 30 - strlen(defines[j]); k++)
+					for (k = 0; k < maxlen - strlen(defines[j]); k++)
 						printf(" ");
 					if ((j + 1) % 3 == 0)
 						printf("\n");
