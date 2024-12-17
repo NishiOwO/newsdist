@@ -274,13 +274,13 @@ if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = S
 	if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSLv3_server_method;return 0;}"; then
 		define "HAS_SSLV3_SERVER_METHOD"
 	else
-		undef "HAS_SSLV23_SERVER_METHOD"
+		undef "HAS_SSLV3_SERVER_METHOD"
 	fi
 	log_raw "Checking if SSLv2_server_method exists: "
 	if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSLv2_server_method;return 0;}"; then
 		define "HAS_SSLV2_SERVER_METHOD"
 	else
-		undef "HAS_SSLV23_SERVER_METHOD"
+		undef "HAS_SSLV2_SERVER_METHOD"
 	fi
 else
 	undef "HAS_OPENSSL"
