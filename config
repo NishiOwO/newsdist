@@ -6,6 +6,12 @@ if [ "x$PREFIX" = "x" ]; then
 fi
 VERSION="1.0"
 
+PLATFORM=`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -r | cut -d'.' -f1`
+
+if [ -f "Config/$PLATFORM" ]; then
+	. Config/$PLATFORM
+fi
+
 stty -echo
 
 for i in $@; do
@@ -181,6 +187,7 @@ log "         is under public-domain."
 log ""
 
 if [ "x$CC" = "x" ]; then
+	info "GCC/Clang should work."
 	getinput "What is your C compiler" "cc"
 	CC="$input"
 fi
