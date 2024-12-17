@@ -233,8 +233,15 @@ log_raw "Checking if OpenSSL works: "
 if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl"; then
 	define "HAS_OPENSSL"
 	LIBS="$LIBS -lcrypto -lssl"
+	SSL="openssl"
 else
 	undef "HAS_OPENSSL"
+fi
+
+if [ ! "x$SSL" = "x" ]; then
+	define "HAS_SSL"
+else
+	undef "HAS_SSL"
 fi
 
 log_raw "Checking if openlog exists: "
