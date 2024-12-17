@@ -11,17 +11,14 @@
 
 #ifdef HAS_OPENSSL
 #include <openssl/opensslv.h>
+const char* nd_sslver = OPENSSL_VERSION_TEXT;
 #endif
 
-char *
+const char *
 nd_get_ssl(void)
 {
 #ifdef HAS_SSL
-#ifdef HAS_OPENSSL
-	return OPENSSL_VERSION_TEXT;
-#else
-	return NULL;
-#endif
+	return nd_sslver;
 #else
 	return NULL;
 #endif
