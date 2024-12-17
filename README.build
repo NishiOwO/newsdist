@@ -1,0 +1,6 @@
+Building NewsDist                                                      Dec 2024
+
+NewsDist currently supports these platforms:
+ - NetBSD           (Checked working on amd64 10.0)
+ - SCO OpenServer   (Checked working on 5.0.7)
+ - Debian GNU/Linux (Checked working on x86_64 12)

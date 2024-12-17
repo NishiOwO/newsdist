@@ -194,6 +194,7 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 	SELECT_H="winsock2.h"
 	POLL_H="winsock2.h"
 	SOCKET_H="winsock2.h"
+	LIBS="$LIBS -lws2_32"
 else
 	undef "HAS_WINSOCK"
 fi
