@@ -307,6 +307,13 @@ else
 	undef "HAS_FORK"
 fi
 
+log_raw "Checking if uname exists: "
+if test_c "#include <sys/utsname.h>\nint main(int argc, char** argv){void* s = uname;return 0;}"; then
+	define "HAS_UNAME"
+else
+	undef "HAS_UNAME"
+fi
+
 echo "#define DEFINES {$DEFINES}" >> config.h
 
 echo "#endif" >> config.h

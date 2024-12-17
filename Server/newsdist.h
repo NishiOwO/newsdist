@@ -17,4 +17,7 @@ int		nd_init_server(void);
 /* socket.c */
 const char *	nd_get_ssl(void);
 
+/* util.c */
+char *		nd_strdup(const char *str);
+
 #endif
