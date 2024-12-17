@@ -45,8 +45,20 @@ Welcome			{
 	return WELCOME;
 }
 
+Port			{
+	return PORT;
+}
+
+SSLPort			{
+	return SSLPORT;
+}
+
 [ \t]+			{
 	return SPACES;
+}
+
+[0-9]+			{
+	return NUMBER;
 }
 
 .			{

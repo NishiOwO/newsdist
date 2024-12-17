@@ -9,15 +9,19 @@ int yyconferror(const char*);
 %}
 
 %start list
-%token NEWLINE STRING SPACES
-%token WELCOME
+%token NEWLINE STRING NUMBER SPACES
+%token WELCOME PORT SSLPORT
 
 %%
 
 list		: component
-		| list component;
+		| list component
+		;
 
 component	: WELCOME SPACES STRING NEWLINE
+		| PORT SPACES NUMBER NEWLINE
+		| SSLPORT SPACES NUMBER NEWLINE
 		| NEWLINE;
+		;
 
 %%
