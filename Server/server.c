@@ -16,7 +16,7 @@
 #define PLAIN	0
 #define SECURE	1
 
-int server_sockets[2];
+int		server_sockets[2];
 
 int
 nd_init_server(void)

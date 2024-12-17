@@ -15,6 +15,6 @@ void		nd_log_notice(const char *info);
 int		nd_init_server(void);
 
 /* socket.c */
-char*		nd_get_ssl(void);
+char *		nd_get_ssl(void);
 
 #endif

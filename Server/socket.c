@@ -7,8 +7,10 @@
 
 #include "../config.h"
 
-char*		nd_get_ssl(void){
+#include <stddef.h>
+
+char *
+nd_get_ssl(void)
+{
 	return NULL;
 }
-
-
