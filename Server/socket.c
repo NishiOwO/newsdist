@@ -15,7 +15,7 @@ const char     *nd_sslver = OPENSSL_VERSION_TEXT;
 #endif
 
 const char *
-nd_get_ssl(void)
+nd_get_ssl_version(void)
 {
 #ifdef HAS_SSL
 	return nd_sslver;

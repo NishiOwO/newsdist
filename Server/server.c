@@ -30,7 +30,7 @@ nd_init_server(void)
 	server_sockets[SECURE] = -1;
 #ifdef HAS_SSL
 	nd_log_info("TLS/SSL support enabled");
-	nd_log_info(nd_get_ssl());
+	nd_log_info(nd_get_ssl_version());
 #endif
 	return 0;
 }
