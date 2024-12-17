@@ -14,9 +14,11 @@
 #endif
 
 #define PLAIN	0
-#define SECURE	1
+#define PLAIN6	1
+#define SECURE	2
+#define SECURE6	3
 
-int		server_sockets[2];
+int		server_sockets[4];
 
 int
 nd_init_server(void)
@@ -27,7 +29,9 @@ nd_init_server(void)
 	WSAStartup(MAKEWORD(2, 0), &wsa);
 #endif
 	server_sockets[PLAIN] = -1;
+	server_sockets[PLAIN6] = -1;
 	server_sockets[SECURE] = -1;
+	server_sockets[SECURE6] = -1;
 #ifdef HAS_SSL
 	nd_log_info("TLS/SSL support enabled");
 	nd_log_info(nd_get_ssl_version());

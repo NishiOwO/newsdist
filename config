@@ -222,6 +222,12 @@ else
 fi
 log_raw "Checking if AF_INET exists: "
 test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
+log_raw "Checking if AF_INET6 exists: "
+if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET6;return 0;}"; then
+	define "HAS_IPV6"
+else
+	undef "HAS_IPV6"
+fi
 
 log_raw "Checking if strdup exists: "
 if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
