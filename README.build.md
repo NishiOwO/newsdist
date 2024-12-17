@@ -2,13 +2,18 @@
 
 NewsDist currently supports these platforms:
  - NetBSD             (Checked working on amd64 10.0)
+   
    You can pass `Config/netbsd-10' to `./config' to build for this platform.
  - SCO OpenServer     (Checked working on 5.0.7)
+   
    You can pass `Config/sco_sv-3' to `./config' to build for this platform.
+   
    You will have to build Berkeley Yacc and recent Flex to get it working.
  - Debian GNU/Linux   (Checked working on x86_64 12)
+   
    You can pass `Config/linux-6' to `./config' to build for this platform.
  - Windows x86/x86_64
+   
    You can pass `Config/win32' or `Config/win64' to `./config' to build for this platform.
 
 And it might build on other *nix platforms, but I haven't tested on other platforms.
