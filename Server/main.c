@@ -38,7 +38,7 @@ main(int argc, char **argv)
 					if ((j % 3) == 0)
 						printf("    ");
 					printf("%s", defines[j]);
-					for (k = 0; k < 20 - strlen(defines[j]); k++)
+					for (k = 0; k < 30 - strlen(defines[j]); k++)
 						printf(" ");
 					if ((j + 1) % 3 == 0)
 						printf("\n");
