@@ -1,4 +1,4 @@
-Building NewsDist                                                      Dec 2024
+Building NewsDist
 
 NewsDist currently supports these platforms:
  - NetBSD             (Checked working on amd64 10.0)
