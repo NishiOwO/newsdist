@@ -19,6 +19,30 @@ for i in $@; do
 	--prefix=*)
 		PREFIX=`echo $i | sed 's/--prefix=//g'`
 		;;
+	--help)
+		echo "This is a configuration utility for NewsDist."
+		echo ""
+		echo "Usage: $0 [options] [variables] [config]"
+		echo ""
+		echo "Options:"
+		echo "  --prefix=[prefix]     Specifies the prefix"
+		echo ""
+		echo "Variables:"
+		echo "  CC                    C compiler"
+		echo "  CFLAGS                Flags to be used at compile-time"
+		echo "  LDFLAGS               Flags to be used at link-time"
+		echo "  LIBS                  Libraries to be linked"
+		echo "  YACC                  Yacc"
+		echo "  LEX                   Lex"
+		echo ""
+		echo "Recognized configs:"
+		echo "  `ls -d Config/* | tr '\n' ' '`"
+		exit 0
+		;;
+	--*)
+		echo "Unknown flag: $i"
+		exit 1
+		;;
 	*)
 		echo $i | grep "=" >/dev/null 2>&1
 		if [ "$?" = "0" ]; then
