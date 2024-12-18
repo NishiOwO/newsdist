@@ -5,7 +5,7 @@ include $(TOPDIR)/config.mk
 OBJS  = main.o log.o server.o socket.o util.o
 OBJS += yconf.tab.o yconf.yy.o
 
-.PHONY: all clean
+.PHONY: all install clean
 .SUFFIXES: .c .o
 
 all: newsdist$(EXEC)
@@ -24,3 +24,7 @@ yconf.yy.c: config.l yconf.tab.c
 
 clean:
 	rm -f *.o *.exe newsdist *.tab.* *.yy.*
+
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/bin
+	cp newsdist$(EXEC) $(DESTDIR)$(PREFIX)/bin/

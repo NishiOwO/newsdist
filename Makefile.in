@@ -2,11 +2,12 @@
 
 include config.mk
 
-.PHONY: all distclean clean ./Server maintainer
+.PHONY: all install distclean clean ./Server maintainer
 
 DIRS = ./Server
+DESTDIR =
 
-FLAGS = TOPDIR=..
+FLAGS = TOPDIR=.. DESTDIR=$(DESTDIR)
 
 all: $(DIRS)
 
@@ -23,8 +24,14 @@ clean:
 	done
 
 distclean:
-	touch config.mk
 	for i in $(DIRS); do \
 		$(MAKE) -C $$i clean $(FLAGS) ; \
 	done
 	rm -f config.h config.mk config.cache Makefile
+
+install: all
+	mkdir -p $(DESTDIR)$(PREFIX)/etc
+	for i in $(DIRS); do \
+		$(MAKE) -C $$i install $(FLAGS) ; \
+	done
+	if [ ! -f $(DESTDIR)$(PREFIX)/etc/newsdist.conf ]; then cp example.conf $(DESTDIR)$(PREFIX)/etc/newsdist.conf ; else echo "example.conf not installed" ; fi
