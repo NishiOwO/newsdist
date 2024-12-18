@@ -15,12 +15,19 @@ fi
 stty -echo
 
 for i in $@; do
-	echo $i | grep "=" >/dev/null 2>&1
-	if [ "$?" = "0" ]; then
-		eval $i
-	else
-		. $i
-	fi
+	case "$i" in
+	--prefix=*)
+		PREFIX=`echo $i | sed 's/--prefix=//g'`
+		;;
+	*)
+		echo $i | grep "=" >/dev/null 2>&1
+		if [ "$?" = "0" ]; then
+			eval $i
+		else
+			. $i
+		fi
+		;;
+	esac
 done
 
 PRINTF="printf"
@@ -451,6 +458,7 @@ echo "TOPDIR = `pwd`" >> config.mk
 echo "EXEC = $EXEC" >> config.mk
 echo "YACC = $YACC" >> config.mk
 echo "LEX = $LEX" >> config.mk
+echo "PREFIX = $PREFIX" >> config.mk
 
 cp Makefile.in Makefile
 
