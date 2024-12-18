@@ -218,6 +218,25 @@ log "         is under public-domain."
 log ""
 
 if [ "x$CC" = "x" ]; then
+	log_raw "Probing C compiler: "
+	for c in gcc clang cc; do
+		OLDIFS="$IFS"
+		IFS=":"
+		for i in $PATH; do
+			if [ -f "$i/$c" ]; then
+				CC=$i/$c
+				echo $CC
+				break
+			fi
+		done
+		IFS="$OLDIFS"
+		if [ ! "x$CC" = "x" ]; then
+			break;
+		fi
+	done	
+fi
+
+if [ "x$CC" = "x" ]; then
 	info "GCC/Clang should work."
 	getinput "What is your C compiler" "cc"
 	CC="$input"
