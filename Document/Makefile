@@ -1,6 +1,6 @@
 # $Id$
 
-MD = sed -E 's/Note: /\n   Note: /g' | sed "s/@DATE@//g" | sed -E 's/[ \t]+$$//g'
+MD = sed -E 's/Note: /\n   Note: /g' | sed "s/@DATE@//g" | sed -E 's/[ \t]+$$//g' | tr "'" "\`"
 PLAIN = sed -E 's/^\# *//g' | sed "s/@DATE@/`date +'%b %Y'`/g" | sed 's/```//g' | fold -s
 
 .PHONY: all
