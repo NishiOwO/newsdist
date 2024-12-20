@@ -7,6 +7,7 @@ fi
 VERSION="1.0"
 
 PLATFORM=`uname -s | tr '[:upper:]' '[:lower:]'`-`uname -r | cut -d'.' -f1`
+WERROR=""
 
 if [ -f "Config/$PLATFORM" ]; then
 	. Config/$PLATFORM
@@ -168,7 +169,7 @@ test_c () {
 	rm -f /tmp/$$.c
 	$PRINTF "$1" > /tmp/$$.c
 	if [ "x$2" = "x" ]; then
-		$CC $CFLAGS -Werror -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+		$CC $CFLAGS $WERROR -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
 		if [ "$?" = "0" ]; then
 			echo "yes"
 		else
@@ -177,7 +178,7 @@ test_c () {
 		fi
 		rm -f /tmp/$$.c /tmp/$$.o
 	else
-		$CC $CFLAGS $LDFLAGS -Werror -o /tmp/$$ /tmp/$$.c $2 >/dev/null 2>&1
+		$CC $CFLAGS $LDFLAGS $WERROR -o /tmp/$$ /tmp/$$.c $2 >/dev/null 2>&1
 		if [ "$?" = "0" ]; then
 			echo "yes"
 		else
@@ -241,6 +242,17 @@ if [ "x$CC" = "x" ]; then
 	getinput "What is your C compiler" "cc"
 	CC="$input"
 fi
+
+log_raw "Does -Werror work: "
+echo >/tmp/$$.c
+$CC -Werror -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+if [ "$?" = "0" ]; then
+	WERROR="-Werror"
+	echo "yes"
+else
+	echo "no"
+fi
+rm -f /tmp/$$.c /tmp/$$.o
 
 log_raw "Does -O2 work: "
 echo >/tmp/$$.c
