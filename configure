@@ -242,6 +242,37 @@ if [ "x$CC" = "x" ]; then
 	CC="$input"
 fi
 
+log_raw "Does -O2 work: "
+echo >/tmp/$$.c
+$CC -O2 -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+if [ "$?" = "0" ]; then
+	CFLAGS="$CFLAGS -O2"
+	echo "yes"
+else
+	echo "no"
+fi
+rm -f /tmp/$$.c /tmp/$$.o
+
+log_raw "Does -ansi work: "
+echo >/tmp/$$.c
+$CC -std=c89 -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+if [ "$?" = "0" ]; then
+	CFLAGS="$CFLAGS -ansi"
+	echo "yes"
+else
+	echo "no"
+	log_raw "Does -std=c89 work: "
+	echo >/tmp/$$.c
+	$CC -std=c89 -c -o /tmp/$$.o /tmp/$$.c >/dev/null 2>&1
+	if [ "$?" = "0" ]; then
+		CFLAGS="$CFLAGS -std=c89"
+		echo "yes"
+	else
+		echo "no"
+	fi
+fi
+rm -f /tmp/$$.c /tmp/$$.o
+
 echo "/* This file is auto-generated */" > config.h
 echo "#ifndef __NEWSDIST_CONFIG_H__" >> config.h
 echo "#define __NEWSDIST_CONFIG_H__" >> config.h
@@ -494,8 +525,8 @@ echo "$LEX"
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
-echo "CFLAGS = $CFLAGS -ansi -O2 -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\"" >> config.mk
-echo "LDFLAGS = $LDFLAGS -O2" >> config.mk
+echo "CFLAGS = $CFLAGS -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\"" >> config.mk
+echo "LDFLAGS = $LDFLAGS" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
 echo "EXEC = $EXEC" >> config.mk
