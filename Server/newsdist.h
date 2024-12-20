@@ -6,6 +6,8 @@
 #ifndef __NEWSDIST_H__
 #define __NEWSDIST_H__
 
+#include "../config.h"
+
 /* log.c */
 void		nd_init_log(void);
 void		nd_log_info(const char *info);
