@@ -92,6 +92,12 @@ nd_init_server(void)
 			memset(&inet6, 0, sizeof(inet6));
 			inet6.sin6_family = AF_INET6;
 			inet6.sin6_addr = in6addr_any;
+			inet6.sin6_port = htons((i & 2) ? ssl_port : plain_port);
+			if (bind(server_sockets[i], (struct sockaddr *)&inet6, sizeof(inet6)) < 0) {
+				CLOSE_SOCKET(server_sockets[i]);
+				nd_log_notice("bind fail");
+				return 1;
+			}
 #endif
 		} else {
 			/* IPv4 */
@@ -99,7 +105,18 @@ nd_init_server(void)
 			memset(&inet4, 0, sizeof(inet4));
 			inet4.sin_family = AF_INET;
 			inet4.sin_addr.s_addr = INADDR_ANY;
+			inet4.sin_port = htons((i & 2) ? ssl_port : plain_port);
+			if (bind(server_sockets[i], (struct sockaddr *)&inet4, sizeof(inet4)) < 0) {
+				CLOSE_SOCKET(server_sockets[i]);
+				nd_log_notice("bind fail");
+				return 1;
+			}
 #endif
+		}
+		if (listen(server_sockets[i], 128) < 0) {
+			CLOSE_SOCKET(server_sockets[i]);
+			nd_log_notice("listen fail");
+			return 1;
 		}
 	}
 

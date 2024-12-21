@@ -24,4 +24,19 @@ const char *	nd_get_ssl_version(void);
 char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
 
+
+/* Config implementation */
+#ifdef CONFIG_IMPLEMENTATION
+#define CONFIG_DECL
+#else
+#define CONFIG_DECL extern
+#endif
+
+CONFIG_DECL int	ssl_port;
+CONFIG_DECL int	plain_port;
+
+#define CONFIG_ASSIGN_DEFAULT \
+	ssl_port = 563; \
+	plain_port = 119;
+
 #endif

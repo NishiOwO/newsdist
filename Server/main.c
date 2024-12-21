@@ -22,6 +22,8 @@ main(int argc, char **argv)
 	int		i;
 	char	       *buffer;
 
+	CONFIG_ASSIGN_DEFAULT;
+
 	printf("NewsDist NNTP daemon - NewsDist/%s, system = %s\n", NEWSDIST_VERSION, (buffer = nd_get_system()));
 	free(buffer);
 	printf("Under public-domain, original by Nishi <nishi@nishi.boats>.\n");

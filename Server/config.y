@@ -4,6 +4,9 @@
  */
 
 %{
+#define CONFIG_IMPLEMENTATION
+#include "newsdist.h"
+
 int yyconflex(void);
 int yyconferror(const char*);
 %}
@@ -24,8 +27,12 @@ list		: component
 		;
 
 component	: WELCOME SPACES STRING NEWLINE
-		| PORT SPACES NUMBER NEWLINE
-		| SSLPORT SPACES NUMBER NEWLINE
+		| PORT SPACES NUMBER NEWLINE {
+	plain_port = $<number>3;
+}
+		| SSLPORT SPACES NUMBER NEWLINE {
+	ssl_port = $<number>3;
+}
 		| NEWLINE;
 		;
 
