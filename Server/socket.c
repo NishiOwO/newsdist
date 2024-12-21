@@ -5,8 +5,6 @@
 
 #include "newsdist.h"
 
-#include "../config.h"
-
 #include <stddef.h>
 
 #ifdef HAS_OPENSSL

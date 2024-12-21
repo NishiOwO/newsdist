@@ -5,8 +5,6 @@
 
 #include "newsdist.h"
 
-#include "../config.h"
-
 #include <stdio.h>
 #include <time.h>
 #ifdef HAS_SYSLOG

@@ -3,20 +3,11 @@
  * SPDX-License-Identifier: Unlicense
  */
 
+#define INCLUDE_SOCKET
+
 #include "newsdist.h"
 
-#include "../config.h"
-
-#ifdef HAS_WINSOCK
-#include <winsock2.h>
-#else
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/tcp.h>
-#include <netinet/in.h>
-#endif
 #include <string.h>
-#include <unistd.h>
 
 #define PLAIN	0
 #define PLAIN6	1
@@ -120,5 +111,11 @@ nd_init_server(void)
 		}
 	}
 
+	return 0;
+}
+
+int
+nd_loop_server(void)
+{
 	return 0;
 }

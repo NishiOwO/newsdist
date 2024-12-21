@@ -15,6 +15,7 @@ void		nd_log_notice(const char *info);
 
 /* server.c */
 int		nd_init_server(void);
+int		nd_loop_server(void);
 
 /* socket.c */
 const void *	nd_create_method(void);
@@ -38,5 +39,18 @@ CONFIG_DECL int	plain_port;
 #define CONFIG_ASSIGN_DEFAULT \
 	ssl_port = 563; \
 	plain_port = 119;
+
+/* Include socket headers or not */
+#ifdef INCLUDE_SOCKET
+#ifdef HAS_WINSOCK
+#include <winsock2.h>
+#else
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <netinet/tcp.h>
+#include <netinet/in.h>
+#endif
+#include <unistd.h>
+#endif
 
 #endif

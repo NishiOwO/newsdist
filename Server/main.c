@@ -9,8 +9,6 @@
 
 #include "newsdist.h"
 
-#include "../config.h"
-
 char	       *confpath = PREFIX "/etc/newsdist.conf";
 
 int		yyconfparse(void);
@@ -78,5 +76,5 @@ main(int argc, char **argv)
 	nd_init_log();
 	if (nd_init_server() != 0)
 		return 1;
-	return 0;
+	return nd_loop_server();
 }

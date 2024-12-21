@@ -5,8 +5,6 @@
 
 #include "newsdist.h"
 
-#include "../config.h"
-
 #ifdef HAS_UNAME
 #include <sys/utsname.h>
 #endif
