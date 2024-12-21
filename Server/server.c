@@ -86,7 +86,7 @@ nd_init_server(void)
 			inet6.sin6_family = AF_INET6;
 			inet6.sin6_addr = in6addr_any;
 			inet6.sin6_port = htons((i & 2) ? ssl_port : plain_port);
-			if (bind(server_sockets[i], (struct sockaddr *)&inet6, sizeof(inet6)) < 0) {
+			if (bind(server_sockets[i], (struct sockaddr *)&inet6, sizeof(inet6)) < 0 && errno != ENETUNREACH) {
 				CLOSE_SOCKET(server_sockets[i]);
 				nd_log_notice("bind fail");
 				return 1;
@@ -99,7 +99,7 @@ nd_init_server(void)
 			inet4.sin_family = AF_INET;
 			inet4.sin_addr.s_addr = INADDR_ANY;
 			inet4.sin_port = htons((i & 2) ? ssl_port : plain_port);
-			if (bind(server_sockets[i], (struct sockaddr *)&inet4, sizeof(inet4)) < 0) {
+			if (bind(server_sockets[i], (struct sockaddr *)&inet4, sizeof(inet4)) < 0 && errno != ENETUNREACH) {
 				CLOSE_SOCKET(server_sockets[i]);
 				nd_log_notice("bind fail");
 				return 1;

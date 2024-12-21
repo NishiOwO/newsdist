@@ -70,7 +70,15 @@ void
 nd_log_info(const char *info)
 {
 #ifdef USE_SYSTEM_SYSLOG
+#ifndef HAS_LOG_PERROR
+	char		timestr[512];
+#endif
+
 	syslog(LOG_INFO, info);
+#ifndef HAS_LOG_PERROR
+	nd_log_string(timestr);
+	fprintf(stderr, "%s [ info ] %s\n", timestr, info);
+#endif
 #else
 	char		timestr[512];
 
@@ -83,7 +91,15 @@ void
 nd_log_notice(const char *info)
 {
 #ifdef USE_SYSTEM_SYSLOG
+#ifndef HAS_LOG_PERROR
+	char		timestr[512];
+#endif
+
 	syslog(LOG_NOTICE_LEVEL, info);
+#ifndef HAS_LOG_PERROR
+	nd_log_string(timestr);
+	fprintf(stderr, "%s [ info ] %s\n", timestr, info);
+#endif
 #else
 	char		timestr[512];
 
