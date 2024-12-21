@@ -345,7 +345,12 @@ log_raw "Checking if closesocket exists: "
 if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = closesocket;return 0;}"; then
 	echo "#define CLOSE_SOCKET closesocket" >> config.h
 else
-	echo "#define CLOSE_SOCKET close" >> config.h
+	log_raw "Checking if soclose exists: "
+	if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = soclose;return 0;}"; then
+		echo "#define CLOSE_SOCKET soclose" >> config.h
+	else
+		echo "#define CLOSE_SOCKET close" >> config.h
+	fi
 fi
 
 log_raw "Checking if SO_REUSEADDR exists: "

@@ -75,14 +75,14 @@ nd_init_server(void)
 #ifdef HAS_SO_REUSEADDR
 		if (setsockopt(server_sockets[i], SOL_SOCKET, SO_REUSEADDR, (void *)&yes, sizeof(yes)) < 0) {
 			CLOSE_SOCKET(server_sockets[i]);
-			nd_log_notice("setsockopt fail");
+			nd_log_notice("setsockopt fail (SO_REUSEADDR)");
 			return 1;
 		}
 #endif
 #ifdef HAS_TCP_NODELAY
 		if (setsockopt(server_sockets[i], IPPROTO_TCP, TCP_NODELAY, (void *)&yes, sizeof(yes)) < 0) {
 			CLOSE_SOCKET(server_sockets[i]);
-			nd_log_notice("setsockopt fail");
+			nd_log_notice("setsockopt fail (TCP_NODELAY)");
 			return 1;
 		}
 #endif
@@ -90,11 +90,15 @@ nd_init_server(void)
 			/* IPv6 */
 #ifdef HAS_IPV6
 			memset(&inet6, 0, sizeof(inet6));
+			inet6.sin6_family = AF_INET6;
+			inet6.sin6_addr = in6addr_any;
 #endif
 		} else {
 			/* IPv4 */
 #ifdef HAS_IPV4
 			memset(&inet4, 0, sizeof(inet4));
+			inet4.sin_family = AF_INET;
+			inet4.sin_addr.s_addr = INADDR_ANY;
 #endif
 		}
 	}

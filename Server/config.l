@@ -58,6 +58,7 @@ SSLPort			{
 }
 
 [0-9]+			{
+	yyconflval.number = atoi(yytext);
 	return NUMBER;
 }
 
