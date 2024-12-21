@@ -49,8 +49,23 @@ CONFIG_DECL int	plain_port;
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
+#ifdef HAS_POLL
+#include <sys/poll.h>
+#endif
+#ifdef HAS_SELECT
+#include <sys/select.h>
+#endif
 #endif
 #include <unistd.h>
+#endif
+
+/* Include errno headers or not */
+#ifdef INCLUDE_ERRNO
+#ifdef HAS_ERRNO
+#include <errno.h>
+#else
+extern int	errno;
+#endif
 #endif
 
 #endif

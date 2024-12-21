@@ -372,6 +372,13 @@ else
 	undef "HAS_STRDUP"
 fi
 
+log_raw "Checking if errno exists: "
+if test_c "#include <errno.h>\nint main(int argc, char** argv){(void)errno;return 0;}"; then
+	define "HAS_ERRNO"
+else
+	undef "HAS_ERRNO"
+fi
+
 log_raw "Checking if libsocket exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "-lsocket"; then
 	LIBS="$LIBS -lsocket"

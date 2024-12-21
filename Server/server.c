@@ -4,9 +4,11 @@
  */
 
 #define INCLUDE_SOCKET
+#define INCLUDE_ERRNO
 
 #include "newsdist.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 #define PLAIN	0
@@ -117,5 +119,52 @@ nd_init_server(void)
 int
 nd_loop_server(void)
 {
+	int		i;
+#if defined(HAS_POLL)
+	/* This is preferred way */
+	int		count = 0;
+	struct pollfd  *fds;
+
+	for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
+		if (server_sockets[i] != NO_SOCKET)
+			count++;
+	}
+	fds = malloc(sizeof(*fds) * count);
+	count = 0;
+	for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
+		if (server_sockets[i] == NO_SOCKET)
+			continue;
+		fds[i].fd = server_sockets[i];
+		fds[i].events = POLLIN | POLLPRI;
+		count++;
+	}
+#elif defined(HAS_SELECT)
+	fd_set		fdset;
+	struct timeval	tv;
+#endif
+	while (1) {
+		int		n;
+#if defined(HAS_POLL)
+		n = poll(fds, count, 1000);
+#elif defined(HAS_SELECT)
+		for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
+			if (server_sockets[i] == NO_SOCKET)
+				continue;
+			FD_SET(server_sockets[i], &fdset);
+		}
+		tv.tv_sec = 1;
+		tv.tv_usec = 0;
+		n = select(FD_SETSIZE, &fdset, NULL, NULL, &tv);
+#endif
+		if (n < 0) {
+			if (errno == EINTR)
+				continue;
+			nd_log_notice("select/poll fail");
+			break;
+		} else if (n > 0) {
+			/* Connection */
+		}
+	}
+	/* NOTREACHED */
 	return 0;
 }
