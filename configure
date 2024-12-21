@@ -292,6 +292,7 @@ echo "#define __NEWSDIST_CONFIG_H__" >> config.h
 SELECT_H="sys/select.h"
 POLL_H="sys/poll.h"
 SOCKET_H="sys/socket.h"
+TCP_H="netinet/tcp.h"
 
 log_raw "Checking if Winsock 2 exists: "
 if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; then
@@ -299,6 +300,7 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 	SELECT_H="winsock2.h"
 	POLL_H="winsock2.h"
 	SOCKET_H="winsock2.h"
+	TCP_H="winsock2.h"
 	LIBS="$LIBS -lws2_32"
 else
 	undef "HAS_WINSOCK"
@@ -307,6 +309,12 @@ fi
 log_raw "Is this Linux build: "
 if test_c "#ifndef __linux__\n#error no\n#endif"; then
 	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
+fi
+log_raw "Checking if TCP_NODELAY exists: "
+if test_c "#include <$TCP_H>\nint main(int argc, char** argv){(void)TCP_NODELAY;return 0;}"; then
+	define "HAS_TCP_NODELAY"
+else
+	undef "HAS_TCP_NODELAY"
 fi
 log_raw "Checking if select exists: "
 if test_c "#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
@@ -321,12 +329,30 @@ else
 	undef "HAS_POLL"
 fi
 log_raw "Checking if AF_INET exists: "
-test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}" || quit
+if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
+	define "HAS_IPV4"
+else
+	undef "HAS_IPV4"
+fi
 log_raw "Checking if AF_INET6 exists: "
 if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET6;return 0;}"; then
 	define "HAS_IPV6"
 else
 	undef "HAS_IPV6"
+fi
+
+log_raw "Checking if closesocket exists: "
+if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = closesocket;return 0;}"; then
+	echo "#define CLOSE_SOCKET closesocket" >> config.h
+else
+	echo "#define CLOSE_SOCKET close" >> config.h
+fi
+
+log_raw "Checking if SO_REUSEADDR exists: "
+if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)SO_REUSEADDR;return 0;}"; then
+	define "HAS_SO_REUSEADDR"
+else
+	undef "HAS_SO_REUSEADDR"
 fi
 
 log_raw "Checking if strdup exists: "
