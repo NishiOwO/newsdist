@@ -1,7 +1,14 @@
 /* $Id$ */
-#ifndef __MACROS_H__
-#define __MACROS_H__
+#ifndef __MACROS__
+#define __MACROS__
 
-#define AUTHOR "Nishi <nishi@nishi.boats>"
+.TH NAME SECTION DATE NEWSDIST_VERSION_TEXT "NewsDist Documentation"
+.if n .ad l
+.nh
+.SH "NAME"
+NAME_LOWER \- DESCRIPTION
+.SH "DESCRIPTION"
+
+#define AUTHOR_HERE Original was written by \fB\&AUTHOR\&\fP.
 
 #endif

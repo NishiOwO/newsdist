@@ -1,2 +1,16 @@
 /* $Id$ */
+
+#define AUTHOR		Nishi <nishi@nishi.boats>
+#define NAME		NEWSDIST
+#define NAME_LOWER	newsdist
+#define DESCRIPTION	NewsDist daemon
+#define SECTION		8
+
 #include "macros"
+
+\fB\&NAME_LOWER\&\fP, the NewsDist daemon, handles all incoming NNTPi feeds, and handles the authentication if needed. It handles incoming connections on the NNTP port, and also creates and listen to a local port for IPC.
+
+As the master daemon, \fB\&NAME_LOWER\&\fP should be generally be started at boot and be always running.
+
+.SH "AUTHOR"
+AUTHOR_HERE

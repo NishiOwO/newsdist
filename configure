@@ -270,6 +270,7 @@ fi
 
 if [ "x$CPP" = "x" ]; then
 	info "GCC/Clang should work."
+	info "SCO OUDK cc can be used too"
 	getinput "What is your C preprocessor" "cpp"
 	CPP="$input"
 fi
@@ -625,10 +626,12 @@ if [ "x$LEX" = "x" ]; then
 fi
 echo "$LEX"
 
+DEFINES="-DNEWSDIST_VERSION_TEXT=\"\\\"NewsDist $VERSION\\\"\" -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\""
+
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
-echo "CPP = $CPP" >> config.mk
-echo "CFLAGS = $CFLAGS -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\"" >> config.mk
+echo "CPP = $CPP $DEFINES" >> config.mk
+echo "CFLAGS = $CFLAGS $DEFINES" >> config.mk
 echo "LDFLAGS = $LDFLAGS" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
