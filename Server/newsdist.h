@@ -60,7 +60,7 @@ CONFIG_DECL int	plain_port;
 #include <unistd.h>
 
 #ifndef HAS_SOCKLEN_T
-typedef socklen_t int;
+typedef int socklen_t;
 #endif
 #endif
 

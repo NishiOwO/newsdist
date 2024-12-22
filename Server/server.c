@@ -207,8 +207,17 @@ nd_loop_server(void)
 						/* Process socket here */
 #if defined(HAS_FORK)
 						if (fork() == 0) {
+							for(i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
+								if(server_sockets[i] == NO_SOCKET) continue;
+								CLOSE_SOCKET(sock);
+							}
+
+
+
+							CLOSE_SOCKET(sock);
 							_exit(0);
 						}
+						CLOSE_SOCKET(sock);
 #endif
 					}
 				}
