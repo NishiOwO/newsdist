@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #include "newsdist.h"
 
@@ -21,6 +22,11 @@ main(int argc, char **argv)
 {
 	int		i;
 	char	       *buffer;
+#ifdef HAS_FORK
+	int		daemonize = 1;
+#else
+	int		daemonize = 0;
+#endif
 
 	CONFIG_ASSIGN_DEFAULT;
 
@@ -67,6 +73,10 @@ main(int argc, char **argv)
 				enable_syslog = 1;
 			} else if (strcmp(argv[i], "--no-syslog") == 0 || strcmp(argv[i], "-l") == 0) {
 				enable_syslog = 0;
+			} else if (strcmp(argv[i], "--daemon") == 0 || strcmp(argv[i], "-d") == 0) {
+				daemonize = 1;
+			} else if (strcmp(argv[i], "--foreground") == 0 || strcmp(argv[i], "-f") == 0) {
+				daemonize = 0;
 			} else {
 				fprintf(stderr, "Invalid flag: %s\n", argv[i]);
 				return 1;
@@ -86,5 +96,15 @@ main(int argc, char **argv)
 	nd_init_log();
 	if (nd_init_server() != 0)
 		return 1;
+#ifdef HAS_FORK
+	if (daemonize) {
+		if (fork() != 0) {
+			printf("Daemon started\n");
+			return 0;
+		}
+	} else {
+		printf("Not daemonizing\n");
+	}
+#endif
 	return nd_loop_server();
 }
