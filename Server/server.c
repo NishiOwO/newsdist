@@ -87,6 +87,10 @@ nd_init_server(void)
 			inet6.sin6_addr = in6addr_any;
 			inet6.sin6_port = htons((i & 2) ? ssl_port : plain_port);
 			if (bind(server_sockets[i], (struct sockaddr *)&inet6, sizeof(inet6)) < 0 && errno != ENETUNREACH) {
+				/*
+				 * ENETUNREACH if there is no IPv6 assigned,
+				 * confirmed on UnixWare 7
+				 */
 				CLOSE_SOCKET(server_sockets[i]);
 				nd_log_notice("bind fail");
 				return 1;
@@ -163,6 +167,48 @@ nd_loop_server(void)
 			break;
 		} else if (n > 0) {
 			/* Connection */
+			int		incr = 0;
+
+			for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
+				int		go = 0;
+
+				if (server_sockets[i] == NO_SOCKET)
+					continue;
+#if defined(HAS_POLL)
+				if (fds[incr].revents & POLLIN)
+					go = 1;
+#elif defined(HAS_SELECT)
+				if (FD_ISSET(server_sockets[i], &fdset))
+					go = 1;
+#endif
+				if (go) {
+					int		sock;
+#ifdef HAS_IPV4
+					struct sockaddr_in inet4;
+					socklen_t	cl4 = sizeof(inet4);
+#endif
+#ifdef HAS_IPV6
+					struct sockaddr_in6 inet6;
+					socklen_t	cl6 = sizeof(inet6);
+#endif
+#ifdef HAS_IPV4
+					/* IPv4 connection */
+					if (!(i & 1)) {
+						sock = accept(server_sockets[i], (struct sockaddr *)&inet4, &cl4);
+					}
+#endif
+#ifdef HAS_IPV6
+					/* IPv6 connection */
+					if (i & 1) {
+						sock = accept(server_sockets[i], (struct sockaddr *)&inet6, &cl6);
+					}
+#endif
+					if (sock >= 0) {
+						/* Process socket here */
+					}
+				}
+				incr++;
+			}
 		}
 	}
 	/* NOTREACHED */

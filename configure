@@ -316,6 +316,18 @@ if test_c "#include <$TCP_H>\nint main(int argc, char** argv){(void)TCP_NODELAY;
 else
 	undef "HAS_TCP_NODELAY"
 fi
+log_raw "Checking if SO_REUSEADDR exists: "
+if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)SO_REUSEADDR;return 0;}"; then
+	define "HAS_SO_REUSEADDR"
+else
+	undef "HAS_SO_REUSEADDR"
+fi
+log_raw "Checking if socklen_t exists: "
+if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){socklen_t i = 0;return 0;}"; then
+	define "HAS_SOCKLEN_T"
+else
+	undef "HAS_SOCKLEN_T"
+fi
 log_raw "Checking if select exists: "
 if test_c "#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
 	define "HAS_SELECT"
@@ -356,13 +368,6 @@ else
 			echo "#define CLOSE_SOCKET close" >> config.h
 		fi
 	fi
-fi
-
-log_raw "Checking if SO_REUSEADDR exists: "
-if test_c "#include <$SOCKET_H>\nint main(int argc, char** argv){(void)SO_REUSEADDR;return 0;}"; then
-	define "HAS_SO_REUSEADDR"
-else
-	undef "HAS_SO_REUSEADDR"
 fi
 
 log_raw "Checking if strdup exists: "

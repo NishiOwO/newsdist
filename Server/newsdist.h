@@ -58,6 +58,10 @@ CONFIG_DECL int	plain_port;
 #endif
 #endif
 #include <unistd.h>
+
+#ifndef HAS_SOCKLEN_T
+typedef socklen_t int;
+#endif
 #endif
 
 /* Include errno headers or not */
