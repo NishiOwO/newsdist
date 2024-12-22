@@ -2,16 +2,16 @@
 
 include config.mk
 
-.PHONY: all install distclean clean ./Server maintainer
-
-DIRS = ./Server
+DIRS = ./Server ./Document
 DESTDIR =
+
+.PHONY: all install distclean clean $(DIRS) maintainer
 
 FLAGS = TOPDIR=.. DESTDIR=$(DESTDIR)
 
 all: $(DIRS)
 
-./Server::
+./Server ./Document::
 	$(MAKE) -C $@ $(FLAGS)
 
 maintainer:

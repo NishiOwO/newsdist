@@ -234,7 +234,32 @@ if [ "x$CC" = "x" ]; then
 		if [ ! "x$CC" = "x" ]; then
 			break;
 		fi
-	done	
+	done
+	if [ "x$CC" = "x" ]; then
+		echo "not found"
+	fi
+fi
+
+if [ "x$CPP" = "x" ]; then
+	log_raw "Probing C preprocessor: "
+	for c in gcpp cpp; do
+		OLDIFS="$IFS"
+		IFS=":"
+		for i in $PATH; do
+			if [ -f "$i/$c" ]; then
+				CPP=$i/$c
+				echo $CPP
+				break
+			fi
+		done
+		IFS="$OLDIFS"
+		if [ ! "x$CPP" = "x" ]; then
+			break;
+		fi
+	done
+	if [ "x$CPP" = "x" ]; then
+		echo "not found"
+	fi
 fi
 
 if [ "x$CC" = "x" ]; then
@@ -242,6 +267,23 @@ if [ "x$CC" = "x" ]; then
 	getinput "What is your C compiler" "cc"
 	CC="$input"
 fi
+
+if [ "x$CPP" = "x" ]; then
+	info "GCC/Clang should work."
+	getinput "What is your C preprocessor" "cpp"
+	CPP="$input"
+fi
+
+log_raw "Does -P work: "
+echo >/tmp/$$.c
+$CPP -P /tmp/$$.c >/dev/null 2>&1
+if [ "$?" = "0" ]; then
+	CPP="$CPP -P"
+	echo "yes"
+else
+	echo "no"
+fi
+rm -f /tmp/$$.c
 
 log_raw "Does -Werror work: "
 echo >/tmp/$$.c
@@ -585,6 +627,7 @@ echo "$LEX"
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
+echo "CPP = $CPP" >> config.mk
 echo "CFLAGS = $CFLAGS -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\"" >> config.mk
 echo "LDFLAGS = $LDFLAGS" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
