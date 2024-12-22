@@ -275,6 +275,8 @@ if [ "x$CPP" = "x" ]; then
 	CPP="$input"
 fi
 
+info "===== Flag check ====="
+
 log_raw "Does -P work: "
 echo >/tmp/$$.c
 $CPP -P /tmp/$$.c >/dev/null 2>&1
@@ -337,6 +339,15 @@ POLL_H="sys/poll.h"
 SOCKET_H="sys/socket.h"
 TCP_H="netinet/tcp.h"
 
+info "===== Check platform ====="
+
+log_raw "Is this Linux build: "
+if test_c "#ifndef __linux__\n#error no\n#endif"; then
+	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
+fi
+
+info "===== Socket ====="
+
 log_raw "Checking if Winsock 2 exists: "
 if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; then
 	define "HAS_WINSOCK"
@@ -344,14 +355,8 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 	POLL_H="winsock2.h"
 	SOCKET_H="winsock2.h"
 	TCP_H="winsock2.h"
-	LIBS="$LIBS -lws2_32"
 else
 	undef "HAS_WINSOCK"
-fi
-
-log_raw "Is this Linux build: "
-if test_c "#ifndef __linux__\n#error no\n#endif"; then
-	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
 fi
 log_raw "Checking if TCP_NODELAY exists: "
 if test_c "#include <$TCP_H>\nint main(int argc, char** argv){(void)TCP_NODELAY;return 0;}"; then
@@ -400,16 +405,11 @@ log_raw "Checking if closesocket exists: "
 if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = closesocket;return 0;}"; then
 	echo "#define CLOSE_SOCKET closesocket" >> config.h
 else
-	log_raw "Checking if soclose exists: "
-	if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = soclose;return 0;}"; then
-		echo "#define CLOSE_SOCKET soclose" >> config.h
+	log_raw "Checking if close exists: "
+	if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
+		echo "#define CLOSE_SOCKET close" >> config.h
 	else
-		log_raw "Checking if close exists: "
-		if test_c "#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
-			echo "#define CLOSE_SOCKET close" >> config.h
-		else
-			echo "#define CLOSE_SOCKET close" >> config.h
-		fi
+		echo "#define CLOSE_SOCKET close" >> config.h
 	fi
 fi
 
@@ -420,17 +420,16 @@ else
 	undef "HAS_STRDUP"
 fi
 
-log_raw "Checking if errno exists: "
-if test_c "#include <errno.h>\nint main(int argc, char** argv){(void)errno;return 0;}"; then
-	define "HAS_ERRNO"
-else
-	undef "HAS_ERRNO"
-fi
-
 log_raw "Checking if libsocket exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "-lsocket"; then
 	LIBS="$LIBS -lsocket"
 fi
+log_raw "Checking if libws2_32 exists: "
+if test_c "int main(int argc, char** argv){return 0;}" "-lws2_32"; then
+	LIBS="$LIBS -lws2_32"
+fi
+
+info "===== SSL ====="
 
 log_raw "Checking if OpenSSL works: "
 if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl"; then
@@ -489,6 +488,8 @@ else
 	undef "HAS_SSL"
 fi
 
+info "===== Log ====="
+
 log_raw "Checking if openlog exists: "
 if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlog;return 0;}"; then
 	define "HAS_SYSLOG"
@@ -538,18 +539,34 @@ else
 	undef "HAS_LOG_WARNING"
 fi
 
+info "===== Multi-socket ====="
+
 log_raw "Checking if fork exists: "
 if test_c "#include <unistd.h>\nint main(int argc, char** argv){void* s = fork;return 0;}"; then
 	define "HAS_FORK"
 else
 	undef "HAS_FORK"
 fi
+log_raw "Checking if _beginthread exists: "
+if test_c "#include <process.h>\nint main(int argc, char** argv){void* s = _beginthread;return 0;}"; then
+	define "HAS_BEGINTHREAD"
+else
+	undef "HAS_BEGINTHREAD"
+fi
+
+info "===== Platform ====="
 
 log_raw "Checking if uname exists: "
 if test_c "#include <sys/utsname.h>\nint main(int argc, char** argv){void* s = uname;return 0;}"; then
 	define "HAS_UNAME"
 else
 	undef "HAS_UNAME"
+fi
+log_raw "Checking if errno exists: "
+if test_c "#include <errno.h>\nint main(int argc, char** argv){(void)errno;return 0;}"; then
+	define "HAS_ERRNO"
+else
+	undef "HAS_ERRNO"
 fi
 
 echo "#define DEFINES {$DEFINES}" >> config.h

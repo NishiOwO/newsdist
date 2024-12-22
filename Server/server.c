@@ -212,8 +212,6 @@ nd_loop_server(void)
 								CLOSE_SOCKET(sock);
 							}
 
-
-
 							CLOSE_SOCKET(sock);
 							_exit(0);
 						}
