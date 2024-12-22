@@ -13,6 +13,8 @@ char	       *confpath = PREFIX "/etc/newsdist.conf";
 
 int		yyconfparse(void);
 extern FILE    *yyconfin;
+extern int	enable_stderr_log;
+extern int	enable_syslog;
 
 int
 main(int argc, char **argv)
@@ -57,6 +59,14 @@ main(int argc, char **argv)
 					fprintf(stderr, "%s requires an argument\n", argv[i]);
 					return 1;
 				}
+			} else if (strcmp(argv[i], "--stderr-log") == 0 || strcmp(argv[i], "-S") == 0) {
+				enable_stderr_log = 1;
+			} else if (strcmp(argv[i], "--no-stderr-log") == 0 || strcmp(argv[i], "-s") == 0) {
+				enable_stderr_log = 0;
+			} else if (strcmp(argv[i], "--syslog") == 0 || strcmp(argv[i], "-L") == 0) {
+				enable_syslog = 1;
+			} else if (strcmp(argv[i], "--no-syslog") == 0 || strcmp(argv[i], "-l") == 0) {
+				enable_syslog = 0;
 			} else {
 				fprintf(stderr, "Invalid flag: %s\n", argv[i]);
 				return 1;

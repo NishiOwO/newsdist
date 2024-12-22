@@ -13,8 +13,6 @@
 
 #if !defined(HAS_LOG_PID)
 #define LOG_PID 0
-#elif !defined(HAS_LOG_PERROR)
-#define LOG_PERROR 0
 #endif
 
 #if defined(HAS_LOG_NEWS)
@@ -33,12 +31,21 @@
 #define USE_SYSTEM_SYSLOG
 #endif
 
+#ifdef HAS_FORK
+int		enable_stderr_log = 0;
+int		enable_syslog = 1;
+#else
+int		enable_stderr_log = 1;
+int		enable_syslog = 0;
+#endif
+
 void
 nd_init_log(void)
 {
 	printf("Initializing logger\n");
 #ifdef USE_SYSTEM_SYSLOG
-	openlog("newsdist", LOG_PID | LOG_PERROR, LOG_FACILITY);
+	if (enable_syslog)
+		openlog("newsdist", LOG_PID, LOG_FACILITY);
 #endif
 	nd_log_info("NewsDist/" NEWSDIST_VERSION " starting up");
 }
@@ -69,41 +76,27 @@ nd_log_string(char *out)
 void
 nd_log_info(const char *info)
 {
+	char		timestr[512];
 #ifdef USE_SYSTEM_SYSLOG
-#ifndef HAS_LOG_PERROR
-	char		timestr[512];
+	if (enable_syslog)
+		syslog(LOG_INFO, info);
 #endif
-
-	syslog(LOG_INFO, info);
-#ifndef HAS_LOG_PERROR
-	nd_log_string(timestr);
-	fprintf(stderr, "%s [ info ] %s\n", timestr, info);
-#endif
-#else
-	char		timestr[512];
-
-	nd_log_string(timestr);
-	fprintf(stderr, "%s [ info ] %s\n", timestr, info);
-#endif
+	if (enable_stderr_log) {
+		nd_log_string(timestr);
+		fprintf(stderr, "%s [ info ] %s\n", timestr, info);
+	}
 }
 
 void
 nd_log_notice(const char *info)
 {
+	char		timestr[512];
 #ifdef USE_SYSTEM_SYSLOG
-#ifndef HAS_LOG_PERROR
-	char		timestr[512];
+	if (enable_syslog)
+		syslog(LOG_NOTICE_LEVEL, info);
 #endif
-
-	syslog(LOG_NOTICE_LEVEL, info);
-#ifndef HAS_LOG_PERROR
-	nd_log_string(timestr);
-	fprintf(stderr, "%s [ info ] %s\n", timestr, info);
-#endif
-#else
-	char		timestr[512];
-
-	nd_log_string(timestr);
-	fprintf(stderr, "%s [notice] %s\n", timestr, info);
-#endif
+	if (enable_stderr_log) {
+		nd_log_string(timestr);
+		fprintf(stderr, "%s [notice] %s\n", timestr, info);
+	}
 }

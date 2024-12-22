@@ -9,8 +9,9 @@ NAME_LOWER \- DESCRIPTION
 .Sh "DESCRIPTION"
 
 #define AUTHOR_HERE	Original was written by \fB\&AUTHOR\&\fP.
-#define START_LIST	.Bl -tag -width 35 -compact
+#define START_LIST	.Bl -tag -width
 #define END_LIST	.El
 #define FILE		.It Pa
+#define ITEM		.It Fl
 
 #endif

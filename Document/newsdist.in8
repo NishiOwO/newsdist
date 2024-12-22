@@ -12,10 +12,32 @@
 .Pp
 As the master daemon, \fB\&NAME_LOWER\&\fP should be generally be started at boot and be always running.
 
+.Sh "OPTIONS"
+START_LIST 15
+ITEM --config Ar path
+ITEM -C Ar path
+Specifies the config, reads from the PREFIX_RAW/etc/newsdist.conf by default.
+ITEM --version
+ITEM -V
+Displays the version.
+ITEM --stderr-log
+ITEM -S
+Turns on the log output to stderr.
+ITEM --no-stderr-log
+ITEM -s
+Turns off the log output to stderr.
+ITEM --syslog
+ITEM -L
+Turns on the log output to syslog.
+ITEM --no-syslog
+ITEM -l
+Turns off the log output to syslog.
+END_LIST
+
 .Sh "FILES"
-START_LIST
+START_LIST 35
 FILE PREFIX_RAW/etc/newsdist.conf
-The main configuration.
+The default main configuration.
 FILE PREFIX_RAW/bin/newsdist
 The executable itself.
 END_LIST

@@ -498,12 +498,6 @@ if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlo
 	else
 		undef "HAS_LOG_PID"
 	fi
-	log_raw "Checking if LOG_PERROR exists: "
-	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_PERROR;return 0;}"; then
-		define "HAS_LOG_PERROR"
-	else
-		undef "HAS_LOG_PERROR"
-	fi
 	log_raw "Checking if LOG_NEWS exists: "
 	if test_c "#include <syslog.h>\nint main(int argc, char** argv){(void)LOG_NEWS;return 0;}"; then
 		define "HAS_LOG_NEWS"
@@ -537,7 +531,6 @@ if test_c "#include <syslog.h>\nint main(int argc, char** argv){void* s = openlo
 else
 	undef "HAS_SYSLOG"
 	undef "HAS_LOG_PID"
-	undef "HAS_LOG_PERROR"
 	undef "HAS_LOG_NEWS"
 	undef "HAS_LOG_USER"
 	undef "HAS_LOG_INFO"
