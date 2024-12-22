@@ -87,7 +87,12 @@ nd_init_server(void)
 			inet6.sin6_addr = in6addr_any;
 			inet6.sin6_port = htons((i & 2) ? ssl_port : plain_port);
 #ifdef HAS_IPV6_V6ONLY
-			setsockopt(server_sockets[i], IPPROTO_IPV6, IPV6_V6ONLY, (void*)&yes, sizeof(yes));
+
+			/*
+			 * Better set this explicitly, Linux seems to have
+			 * this disabled by default
+			 */
+			setsockopt(server_sockets[i], IPPROTO_IPV6, IPV6_V6ONLY, (void *)&yes, sizeof(yes));
 #endif
 			if (bind(server_sockets[i], (struct sockaddr *)&inet6, sizeof(inet6)) < 0 && errno != ENETUNREACH) {
 				/*
