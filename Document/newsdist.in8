@@ -32,6 +32,12 @@ Turns on the log output to syslog.
 ITEM --no-syslog
 ITEM -l
 Turns off the log output to syslog.
+ITEM --daemon
+ITEM -d
+Tells \fB\&NAME_LOWER\&\fP to daemonize.
+ITEM --foreground
+ITEM -f
+Tells \fB\&NAME_LOWER\&\fP to not daemonize.
 END_LIST
 
 .Sh "FILES"
