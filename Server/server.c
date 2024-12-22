@@ -205,6 +205,11 @@ nd_loop_server(void)
 #endif
 					if (sock >= 0) {
 						/* Process socket here */
+#if defined(HAS_FORK)
+						if (fork() == 0) {
+							_exit(0);
+						}
+#endif
 					}
 				}
 				incr++;
