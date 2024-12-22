@@ -9,8 +9,16 @@
 #include "macros"
 
 \fB\&NAME_LOWER\&\fP, the NewsDist daemon, handles all incoming NNTP feeds, and handles the authentication if needed. It handles incoming connections on the NNTP port, and also creates and listen to a local port for IPC.
-
+.Pp
 As the master daemon, \fB\&NAME_LOWER\&\fP should be generally be started at boot and be always running.
 
-.SH "AUTHOR"
+.Sh "FILES"
+START_LIST
+FILE PREFIX_RAW/etc/newsdist.conf
+The main configuration.
+FILE PREFIX_RAW/bin/newsdist
+The executable itself.
+END_LIST
+
+.Sh "AUTHOR"
 AUTHOR_HERE

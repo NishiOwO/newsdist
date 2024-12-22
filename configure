@@ -626,7 +626,7 @@ if [ "x$LEX" = "x" ]; then
 fi
 echo "$LEX"
 
-DEFINES="-DNEWSDIST_VERSION_TEXT=\"\\\"NewsDist $VERSION\\\"\" -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\""
+DEFINES="-DNEWSDIST_VERSION_TEXT=\"\\\"NewsDist $VERSION\\\"\" -DNEWSDIST_VERSION=\\\"$VERSION\\\" -DPREFIX=\\\"$PREFIX\\\" -DPREFIX_RAW=$PREFIX"
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk

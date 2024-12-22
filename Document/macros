@@ -2,13 +2,15 @@
 #ifndef __MACROS__
 #define __MACROS__
 
-.TH NAME SECTION DATE NEWSDIST_VERSION_TEXT "NewsDist Documentation"
-.if n .ad l
-.nh
-.SH "NAME"
+.Dt NAME SECTION
+.Dd DATE
+.Sh "NAME"
 NAME_LOWER \- DESCRIPTION
-.SH "DESCRIPTION"
+.Sh "DESCRIPTION"
 
-#define AUTHOR_HERE Original was written by \fB\&AUTHOR\&\fP.
+#define AUTHOR_HERE	Original was written by \fB\&AUTHOR\&\fP.
+#define START_LIST	.Bl -tag -width 35 -compact
+#define END_LIST	.El
+#define FILE		.It Pa
 
 #endif
