@@ -14,6 +14,9 @@
 #ifdef HAS_NW_BEGINTHREAD
 #include <nwthread.h>
 #endif
+#ifdef HAS_WIN_BEGINTHREAD
+#include <process.h>
+#endif
 
 #define PLAIN	0
 #define PLAIN6	1
@@ -249,6 +252,8 @@ nd_loop_server(void)
 						CLOSE_SOCKET(sock);
 #elif defined(HAS_NW_BEGINTHREAD)
 						BeginThread(nd_pass, NULL, 0, ptr);
+#elif defined(HAS_WIN_BEGINTHREAD)
+						_beginthread(nd_pass, 0, ptr);
 #else
 						nd_pass(ptr);
 #endif
