@@ -11,6 +11,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef HAS_NW_BEGINTHREAD
+#include <nwthread.h>
+#endif
+
 #define PLAIN	0
 #define PLAIN6	1
 #define SECURE	2
@@ -128,6 +132,18 @@ nd_init_server(void)
 	return 0;
 }
 
+void
+nd_pass(void *tptr)
+{
+	nd_pass_t      *ptr = (nd_pass_t *) tptr;
+
+	CLOSE_SOCKET(ptr->sock);
+	free(ptr);
+#ifdef HAS_NW_BEGINTHREAD
+	ExitThread(EXIT_THREAD, 0);
+#endif
+}
+
 int
 nd_loop_server(void)
 {
@@ -214,6 +230,9 @@ nd_loop_server(void)
 #endif
 					if (sock >= 0) {
 						/* Process socket here */
+						nd_pass_t      *ptr = malloc(sizeof(*ptr));
+
+						ptr->sock = sock;
 #if defined(HAS_FORK)
 						if (fork() == 0) {
 							for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
@@ -222,12 +241,16 @@ nd_loop_server(void)
 								CLOSE_SOCKET(sock);
 							}
 
-							CLOSE_SOCKET(sock);
+							nd_pass(ptr);
 							_exit(0);
+						} else {
+							free(ptr);
 						}
 						CLOSE_SOCKET(sock);
 #elif defined(HAS_NW_BEGINTHREAD)
-						CLOSE_SOCKET(sock);
+						BeginThread(nd_pass, NULL, 0, ptr);
+#else
+						nd_pass(ptr);
 #endif
 					}
 				}

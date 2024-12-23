@@ -25,6 +25,11 @@ const char *	nd_get_ssl_version(void);
 char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
 
+struct nd_pass_struct {
+	int		sock;
+};
+
+typedef struct nd_pass_struct nd_pass_t;
 
 /* Config implementation */
 #ifdef CONFIG_IMPLEMENTATION
