@@ -43,3 +43,7 @@ nd_get_system(void)
 	return nd_strdup("Unknown");
 #endif
 }
+
+#ifndef HAS_HTONS
+uint16_t htons(uint16_t n) { return ((n >> 8) & 0xff) | ((n << 8) & 0xff00); }
+#endif

@@ -42,9 +42,26 @@ CONFIG_DECL int	plain_port;
 
 /* Include socket headers or not */
 #ifdef INCLUDE_SOCKET
-#ifdef HAS_WINSOCK
+#if defined(HAS_WINSOCK)
 #include <winsock2.h>
 #include <ws2tcpip.h>
+#elif defined(IS_NETWARE)
+#include <sys/bsdskt.h>
+#include <sys/socket.h>
+
+#ifndef HAS_INADDR
+struct in_addr {
+        uint32_t s_addr;
+};
+#endif
+#ifndef HAS_SOCKADDR_IN
+struct sockaddr_in {
+        uint16_t sin_family;
+        uint16_t sin_port;
+        struct in_addr sin_addr;
+        uint8_t sin_zero[8];
+};
+#endif
 #else
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -61,6 +78,18 @@ CONFIG_DECL int	plain_port;
 
 #ifndef HAS_SOCKLEN_T
 typedef int socklen_t;
+#endif
+
+#ifndef HAS_IPPROTO_TCP
+#define IPPROTO_TCP 0
+#endif
+
+#ifndef HAS_INADDR_ANY
+#define INADDR_ANY 0
+#endif
+
+#ifndef HAS_HTONS
+uint16_t htons(uint16_t n);
 #endif
 #endif
 

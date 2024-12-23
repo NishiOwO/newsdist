@@ -7,7 +7,7 @@ DESTDIR =
 
 .PHONY: all install distclean clean $(DIRS) maintainer
 
-FLAGS = TOPDIR=.. DESTDIR=$(DESTDIR)
+FLAGS = TOPDIR=.. DESTDIR=$(DESTDIR) @EXPORTS@
 
 all: $(DIRS)
 
