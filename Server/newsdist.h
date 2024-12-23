@@ -51,15 +51,15 @@ CONFIG_DECL int	plain_port;
 
 #ifndef HAS_INADDR
 struct in_addr {
-        uint32_t s_addr;
+	uint32_t	s_addr;
 };
 #endif
 #ifndef HAS_SOCKADDR_IN
 struct sockaddr_in {
-        uint16_t sin_family;
-        uint16_t sin_port;
-        struct in_addr sin_addr;
-        uint8_t sin_zero[8];
+	uint16_t	sin_family;
+	uint16_t	sin_port;
+	struct in_addr	sin_addr;
+	uint8_t		sin_zero[8];
 };
 #endif
 #else
@@ -89,7 +89,7 @@ typedef int socklen_t;
 #endif
 
 #ifndef HAS_HTONS
-uint16_t htons(uint16_t n);
+uint16_t	htons(uint16_t n);
 #endif
 #endif
 

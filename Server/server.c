@@ -159,6 +159,7 @@ nd_loop_server(void)
 #if defined(HAS_POLL)
 		n = poll(fds, count, 1000);
 #elif defined(HAS_SELECT)
+		FD_ZERO(&fdset);
 		for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
 			if (server_sockets[i] == NO_SOCKET)
 				continue;
@@ -224,6 +225,8 @@ nd_loop_server(void)
 							CLOSE_SOCKET(sock);
 							_exit(0);
 						}
+						CLOSE_SOCKET(sock);
+#elif defined(HAS_NW_BEGINTHREAD)
 						CLOSE_SOCKET(sock);
 #endif
 					}

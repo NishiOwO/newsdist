@@ -23,7 +23,7 @@ yconf.yy.c: config.l yconf.tab.c
 	$(LEX) -P yyconf -t config.l > $@ || ( rm -f $@ ; exit 1 )
 
 clean:
-	rm -f *.o *.exe newsdist *.tab.* *.yy.*
+	rm -f *.o *.exe *.nlm newsdist *.tab.* *.yy.*
 
 install: all
 	mkdir -p $(DESTDIR)$(PREFIX)/bin

@@ -45,5 +45,8 @@ nd_get_system(void)
 }
 
 #ifndef HAS_HTONS
-uint16_t htons(uint16_t n) { return ((n >> 8) & 0xff) | ((n << 8) & 0xff00); }
+uint16_t
+htons(uint16_t n) {
+	return ((n >> 8) & 0xff) | ((n << 8) & 0xff00);
+}
 #endif
