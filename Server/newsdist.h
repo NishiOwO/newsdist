@@ -8,6 +8,13 @@
 
 #include "../config.h"
 
+#ifdef HAS_TYPES_H
+#include <types.h>
+#endif
+#ifdef HAS_SYS_TYPES_H
+#include <sys/types.h>
+#endif
+
 /* log.c */
 void		nd_init_log(void);
 void		nd_log_info(const char *info);
