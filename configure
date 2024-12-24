@@ -343,14 +343,6 @@ INET_H="arpa/inet.h"
 
 info "===== Check platform ====="
 
-log_raw "Is this Linux build: "
-if test_c "#ifndef __linux__\n#error no\n#endif"; then
-	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
-fi
-log_raw "Is this GNU/Hurd build: "
-if test_c "#ifndef __gnu_hurd__\n#error no\n#endif"; then
-	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
-fi
 log_raw "Is this NetWare build: "
 if test_c "#ifndef __NETWARE__\n#error no\n#endif"; then
 	define "IS_NETWARE"
@@ -386,6 +378,17 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 else
 	undef "HAS_WINSOCK"
 fi
+
+log_raw "Checking if _DEFAULT_SOURCE is optional: "
+if ! test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){void* s = socket;return 0;}"; then
+	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
+fi
+
+log_raw "Checking if _BSD_SOURCE is optional: "
+if ! test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){void* s = socket;return 0;}"; then
+	CFLAGS="$CFLAGS -D_BSD_SOURCE"
+fi
+
 log_raw "Checking if IPV6_V6ONLY exists: "
 if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)IPV6_V6ONLY;return 0;}"; then
 	define "HAS_IPV6_V6ONLY"
