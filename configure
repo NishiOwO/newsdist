@@ -387,88 +387,88 @@ else
 	undef "HAS_WINSOCK"
 fi
 log_raw "Checking if IPV6_V6ONLY exists: "
-if test_c "$TYPES#include <$IN_H>\nint main(int argc, char** argv){(void)IPV6_V6ONLY;return 0;}"; then
+if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)IPV6_V6ONLY;return 0;}"; then
 	define "HAS_IPV6_V6ONLY"
 else
 	undef "HAS_IPV6_V6ONLY"
 fi
 log_raw "Checking if TCP_NODELAY exists: "
-if test_c "$TYPES#include <$TCP_H>\nint main(int argc, char** argv){(void)TCP_NODELAY;return 0;}"; then
+if test_c "$TYPES\n#include <$TCP_H>\nint main(int argc, char** argv){(void)TCP_NODELAY;return 0;}"; then
 	define "HAS_TCP_NODELAY"
 else
 	undef "HAS_TCP_NODELAY"
 fi
 log_raw "Checking if SO_REUSEADDR exists: "
-if test_c "$TYPES#include <$SOCKET_H>\nint main(int argc, char** argv){(void)SO_REUSEADDR;return 0;}"; then
+if test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)SO_REUSEADDR;return 0;}"; then
 	define "HAS_SO_REUSEADDR"
 else
 	undef "HAS_SO_REUSEADDR"
 fi
 
 log_raw "Checking if socklen_t exists: "
-if test_c "$TYPES#include <$SOCKET_H>\nint main(int argc, char** argv){socklen_t i = 0;return 0;}"; then
+if test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){socklen_t i = 0;return 0;}"; then
 	define "HAS_SOCKLEN_T"
 else
 	undef "HAS_SOCKLEN_T"
 fi
 
 log_raw "Checking if select exists: "
-if test_c "$TYPES#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
+if test_c "$TYPES\n#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
 	define "HAS_SELECT"
 else
 	undef "HAS_SELECT"
 fi
 log_raw "Checking if poll exists: "
-if test_c "$TYPES#include <$POLL_H>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
+if test_c "$TYPES\n#include <$POLL_H>\nint main(int argc, char** argv){void* s = poll;return 0;}"; then
 	define "HAS_POLL"
 else
 	undef "HAS_POLL"
 fi
 
 log_raw "Checking if IPPROTO_TCP exists: "
-if test_c "$TYPES#include <$IN_H>\nint main(int argc, char** argv){(void)IPPROTO_TCP;return 0;}"; then
+if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)IPPROTO_TCP;return 0;}"; then
 	define "HAS_IPPROTO_TCP"
 else
 	undef "HAS_IPPROTO_TCP"
 fi
 log_raw "Checking if INADDR_ANY exists: "
-if test_c "$TYPES#include <$IN_H>\nint main(int argc, char** argv){(void)INADDR_ANY;return 0;}"; then
+if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)INADDR_ANY;return 0;}"; then
 	define "HAS_INADDR_ANY"
 else
 	undef "HAS_INADDR_ANY"
 fi
 log_raw "Checking if AF_INET exists: "
-if test_c "$TYPES#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
+if test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
 	define "HAS_IPV4"
 else
 	undef "HAS_IPV4"
 fi
 log_raw "Checking if AF_INET6 exists: "
-if test_c "$TYPES#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET6;return 0;}"; then
+if test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET6;return 0;}"; then
 	define "HAS_IPV6"
 else
 	undef "HAS_IPV6"
 fi
 
 log_raw "Checking if in_addr exists: "
-if test_c "$TYPES#include <$IN_H>\nint main(int argc, char** argv){struct in_addr s;return 0;}"; then
+if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){struct in_addr s;return 0;}"; then
 	define "HAS_IN_ADDR"
 else
 	undef "HAS_IN_ADDR"
 fi
 log_raw "Checking if sockaddr_in exists: "
-if test_c "$TYPES#include <$IN_H>\nint main(int argc, char** argv){struct sockaddr_in s;return 0;}"; then
+if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){struct sockaddr_in s;return 0;}"; then
 	define "HAS_SOCKADDR_IN"
 else
 	undef "HAS_SOCKADDR_IN"
 fi
 
 log_raw "Checking if htons exists as function: "
-if test_c "$TYPES#include <$INET_H>\nint main(int argc, char** argv){void* s = htons;return 0;}"; then
+if test_c "$TYPES\n#include <$INET_H>\nint main(int argc, char** argv){void* s = htons;return 0;}"; then
 	define "HAS_HTONS"
 else
 	log_raw "Checking if htons exists as macro: "
-	if test_c "$TYPES#include <$INET_H>\n#ifndef htons\n#error no\n#endif"; then
+	if test_c "$TYPES\n#include <$INET_H>\n#ifndef htons\n#error no\n#endif"; then
 		define "HAS_HTONS"
 	else
 		undef "HAS_HTONS"
@@ -476,15 +476,15 @@ else
 fi
 
 log_raw "Checking if closesocket exists: "
-if test_c "$TYPES#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = closesocket;return 0;}"; then
+if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = closesocket;return 0;}"; then
 	echo "#define CLOSE_SOCKET closesocket" >> config.h
 else
 	log_raw "Checking if shutdown exists: "
-	if test_c "$TYPES#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = shutdown;return 0;}"; then
+	if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = shutdown;return 0;}"; then
 		echo "#define CLOSE_SOCKET(x) shutdown(x, 2)" >> config.h
 	else
 		log_raw "Checking if close exists: "
-		if test_c "$TYPES#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
+		if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
 			echo "#define CLOSE_SOCKET close" >> config.h
 		else
 			echo "#define CLOSE_SOCKET close" >> config.h
