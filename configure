@@ -379,7 +379,7 @@ else
 	undef "HAS_WINSOCK"
 fi
 
-DEFINES="$DEFINES -D_DEFAULT_SOURCE -D_BSD_SOURCE"
+CFLAGS="$CFLAGS -D_DEFAULT_SOURCE -D_BSD_SOURCE"
 
 log_raw "Checking if IPV6_V6ONLY exists: "
 if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)IPV6_V6ONLY;return 0;}"; then
@@ -761,7 +761,7 @@ if [ "x$LEX" = "x" ]; then
 fi
 echo "$LEX"
 
-DEFINES="$DEFINES -DNEWSDIST_VERSION_TEXT='\"NewsDist $VERSION\"' -DNEWSDIST_VERSION='\"$VERSION\"' -DPREFIX='\"$PREFIX\"'"
+DEFINES="-DNEWSDIST_VERSION_TEXT='\"NewsDist $VERSION\"' -DNEWSDIST_VERSION='\"$VERSION\"' -DPREFIX='\"$PREFIX\"'"
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
