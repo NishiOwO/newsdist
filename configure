@@ -347,6 +347,10 @@ log_raw "Is this Linux build: "
 if test_c "#ifndef __linux__\n#error no\n#endif"; then
 	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
 fi
+log_raw "Is this GNU/Hurd build: "
+if test_c "#ifndef __gnu_hurd__\n#error no\n#endif"; then
+	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
+fi
 log_raw "Is this NetWare build: "
 if test_c "#ifndef __NETWARE__\n#error no\n#endif"; then
 	define "IS_NETWARE"
