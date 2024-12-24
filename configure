@@ -380,12 +380,12 @@ else
 fi
 
 log_raw "Checking if _DEFAULT_SOURCE is optional: "
-if ! test_c "$TYPES\n#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
+if ! test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
 	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
 fi
 
 log_raw "Checking if _BSD_SOURCE is optional: "
-if ! test_c "$TYPES\n#include <$SELECT_H>\nint main(int argc, char** argv){void* s = select;return 0;}"; then
+if ! test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
 	CFLAGS="$CFLAGS -D_BSD_SOURCE"
 fi
 
