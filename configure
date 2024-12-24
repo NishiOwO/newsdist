@@ -379,15 +379,7 @@ else
 	undef "HAS_WINSOCK"
 fi
 
-log_raw "Checking if _DEFAULT_SOURCE is optional: "
-if ! test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
-	CFLAGS="$CFLAGS -D_DEFAULT_SOURCE"
-fi
-
-log_raw "Checking if _BSD_SOURCE is optional: "
-if ! test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
-	CFLAGS="$CFLAGS -D_BSD_SOURCE"
-fi
+CFLAGS="$CFLAGS -D_DEFAULT_SOURCE -D_BSD_SOURCE"
 
 log_raw "Checking if IPV6_V6ONLY exists: "
 if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)IPV6_V6ONLY;return 0;}"; then
