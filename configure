@@ -379,7 +379,7 @@ else
 	undef "HAS_WINSOCK"
 fi
 
-CFLAGS="$CFLAGS -D_DEFAULT_SOURCE -D_BSD_SOURCE"
+DEFIENS="$DEFINES -D_DEFAULT_SOURCE -D_BSD_SOURCE"
 
 log_raw "Checking if IPV6_V6ONLY exists: "
 if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)IPV6_V6ONLY;return 0;}"; then
