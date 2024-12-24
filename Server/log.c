@@ -1,35 +1,15 @@
 /**
  * $Id$
- * SPDX-License-Identifier: Unlicense
  */
 
-#include "newsdist.h"
+#define INCLUDE_SYSLOG
 
 #include <stdio.h>
 #include <time.h>
-#ifdef HAS_SYSLOG
-#include <syslog.h>
-#endif
 
-#if !defined(HAS_LOG_PID)
-#define LOG_PID 0
-#endif
+#include "newsdist.h"
 
-#if defined(HAS_LOG_NEWS)
-#define LOG_FACILITY LOG_NEWS
-#elif defined(HAS_LOG_USER)
-#define LOG_FACILITY LOG_USER
-#endif
 
-#if defined(HAS_LOG_NOTICE)
-#define LOG_NOTICE_LEVEL LOG_NOTICE
-#elif defined(HAS_LOG_WARNING)
-#define LOG_NOTICE_LEVEL LOG_WARNING
-#endif
-
-#if defined(LOG_FACILITY) && defined(HAS_LOG_INFO) && defined(LOG_NOTICE_LEVEL)
-#define USE_SYSTEM_SYSLOG
-#endif
 
 #ifdef HAS_FORK
 int		enable_stderr_log = 0;

@@ -1,15 +1,13 @@
 /**
  * $Id$
- * SPDX-License-Identifier: Unlicense
  */
 
-#include "newsdist.h"
+#define INCLUDE_UTSNAME
 
-#ifdef HAS_UNAME
-#include <sys/utsname.h>
-#endif
 #include <stdlib.h>
 #include <string.h>
+
+#include "newsdist.h"
 
 char *
 nd_strdup(const char *str)
@@ -39,6 +37,10 @@ nd_get_system(void)
 	return name;
 #elif defined(__MINGW32__)
 	return nd_strdup("Windows");
+#elif defined(IS_OS2)
+	return nd_strdup("OS2");
+#elif defined(IS_NETWARE)
+	return nd_strdup("NetWare");
 #else
 	return nd_strdup("Unknown");
 #endif

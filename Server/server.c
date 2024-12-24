@@ -1,20 +1,19 @@
 /**
  * $Id$
- * SPDX-License-Identifier: Unlicense
  */
 
 #define INCLUDE_SOCKET
 #define INCLUDE_ERRNO
 
-#include "newsdist.h"
-
 #include <stdlib.h>
 #include <string.h>
+
+#include "newsdist.h"
 
 #ifdef HAS_NW_BEGINTHREAD
 #include <nwthread.h>
 #endif
-#ifdef HAS_WIN_BEGINTHREAD
+#ifdef HAS_BEGINTHREAD
 #include <process.h>
 #endif
 
@@ -36,6 +35,9 @@ nd_init_server(void)
 	WSADATA		wsa;
 
 	WSAStartup(MAKEWORD(2, 0), &wsa);
+#endif
+#ifdef IS_OS2
+	sock_init();
 #endif
 	server_sockets[PLAIN] = NO_SOCKET;
 	server_sockets[PLAIN6] = NO_SOCKET;
@@ -145,6 +147,9 @@ nd_pass(void *tptr)
 #ifdef HAS_NW_BEGINTHREAD
 	ExitThread(EXIT_THREAD, 0);
 #endif
+#ifdef HAS_ENDTHREAD
+	_endthread();
+#endif
 }
 
 int
@@ -231,6 +236,7 @@ nd_loop_server(void)
 						sock = accept(server_sockets[i], (struct sockaddr *)&inet6, &cl6);
 					}
 #endif
+					nd_log_info("New connection");
 					if (sock >= 0) {
 						/* Process socket here */
 						nd_pass_t      *ptr = malloc(sizeof(*ptr));
@@ -252,8 +258,12 @@ nd_loop_server(void)
 						CLOSE_SOCKET(sock);
 #elif defined(HAS_NW_BEGINTHREAD)
 						BeginThread(nd_pass, NULL, 0, ptr);
-#elif defined(HAS_WIN_BEGINTHREAD)
+#elif defined(HAS_BEGINTHREAD)
+#ifdef IS_OS2
+						_beginthread(nd_pass, 0, 0, ptr);
+#else
 						_beginthread(nd_pass, 0, ptr);
+#endif
 #else
 						nd_pass(ptr);
 #endif

@@ -1,6 +1,5 @@
 /**
  * $Id$
- * SPDX-License-Identifier: Unlicense
  */
 
 #include <stdio.h>

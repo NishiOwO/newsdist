@@ -366,6 +366,13 @@ else
 	undef "IS_NETWARE"
 fi
 
+log_raw "Is this OS/2 build: "
+if test_c "#ifndef __OS2__\n#error no\n#endif"; then
+	define "IS_OS2"
+else
+	undef "IS_OS2"
+fi
+
 log_raw "Is this Watcom: "
 if test_c "#ifndef __WATCOMC__\n#error no\n#endif"; then
 	WATCOM=1
@@ -456,18 +463,6 @@ if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){(void)INADD
 else
 	undef "HAS_INADDR_ANY"
 fi
-log_raw "Checking if AF_INET exists: "
-if test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET;return 0;}"; then
-	define "HAS_IPV4"
-else
-	undef "HAS_IPV4"
-fi
-log_raw "Checking if AF_INET6 exists: "
-if test_c "$TYPES\n#include <$SOCKET_H>\nint main(int argc, char** argv){(void)AF_INET6;return 0;}"; then
-	define "HAS_IPV6"
-else
-	undef "HAS_IPV6"
-fi
 
 log_raw "Checking if in_addr exists: "
 if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){struct in_addr s;return 0;}"; then
@@ -475,11 +470,17 @@ if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){struct in_a
 else
 	undef "HAS_IN_ADDR"
 fi
-log_raw "Checking if sockaddr_in exists: "
-if test_c "$TYPES\n#include <$IN_H>\nint main(int argc, char** argv){struct sockaddr_in s;return 0;}"; then
-	define "HAS_SOCKADDR_IN"
+log_raw "Checking if AF_INET and sockaddr_in exist: "
+if test_c "$TYPES\n#include <$IN_H>\n#include <$SOCKET_H>\nint main(int argc, char** argv){struct sockaddr_in s;return 0;}"; then
+	define "HAS_IPV4"
 else
-	undef "HAS_SOCKADDR_IN"
+	undef "HAS_IPV4"
+fi
+log_raw "Checking if AF_INET6 and sockaddr_in6 exist: "
+if test_c "$TYPES\n#include <$IN_H>\n#include <$SOCKET_H>\nint main(int argc, char** argv){struct sockaddr_in6 s;return 0;}"; then
+	define "HAS_IPV6"
+else
+	undef "HAS_IPV6"
 fi
 
 log_raw "Checking if htons exists as function: "
@@ -498,15 +499,20 @@ log_raw "Checking if closesocket exists: "
 if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = closesocket;return 0;}"; then
 	echo "#define CLOSE_SOCKET closesocket" >> config.h
 else
-	log_raw "Checking if shutdown exists: "
-	if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = shutdown;return 0;}"; then
-		echo "#define CLOSE_SOCKET(x) shutdown(x, 2)" >> config.h
+	log_raw "Checking if soclose exists: "
+	if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = soclose;return 0;}"; then
+		echo "#define CLOSE_SOCKET soclose" >> config.h
 	else
-		log_raw "Checking if close exists: "
-		if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
-			echo "#define CLOSE_SOCKET close" >> config.h
+		log_raw "Checking if shutdown exists: "
+		if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = shutdown;return 0;}"; then
+			echo "#define CLOSE_SOCKET(x) shutdown(x, 2)" >> config.h
 		else
-			echo "#define CLOSE_SOCKET close" >> config.h
+			log_raw "Checking if close exists: "
+			if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
+				echo "#define CLOSE_SOCKET close" >> config.h
+			else
+				echo "#define CLOSE_SOCKET close" >> config.h
+			fi
 		fi
 	fi
 fi
@@ -655,9 +661,15 @@ else
 fi
 log_raw "Checking if _beginthread exists: "
 if test_c "#include <process.h>\nint main(int argc, char** argv){void* s = _beginthread;return 0;}"; then
-	define "HAS_WIN_BEGINTHREAD"
+	define "HAS_BEGINTHREAD"
 else
-	undef "HAS_WIN_BEGINTHREAD"
+	undef "HAS_BEGINTHREAD"
+fi
+log_raw "Checking if _endthread exists: "
+if test_c "#include <process.h>\nint main(int argc, char** argv){void* s = _endthread;return 0;}"; then
+	define "HAS_ENDTHREAD"
+else
+	undef "HAS_ENDTHREAD"
 fi
 log_raw "Checking if BeginThread exists: "
 if test_c "#include <nwthread.h>\nint main(int argc, char** argv){void* s = BeginThread;return 0;}"; then

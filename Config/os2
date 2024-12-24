@@ -1,0 +1,5 @@
+# $Id$
+CC="owcc"
+CFLAGS="-b os2v2 -I $WATCOM/h/os2"
+LDFLAGS="-b os2v2 -L $WATCOM/lib386/os2"
+EXEC=.exe

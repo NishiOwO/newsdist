@@ -1,6 +1,5 @@
 /**
  * $Id$
- * SPDX-License-Identifier: Unlicense
  */
 
 #ifndef __NEWSDIST_H__
@@ -115,6 +114,43 @@ uint16_t	htons(uint16_t n);
 #include <errno.h>
 #else
 extern int	errno;
+#endif
+#ifndef ENETUNREACH
+#define ENETUNREACH 0
+#endif
+#endif
+
+/* Include syslog headers or not */
+#ifdef INCLUDE_SYSLOG
+#ifdef HAS_SYSLOG
+#include <syslog.h>
+#endif
+
+#if !defined(HAS_LOG_PID)
+#define LOG_PID 0
+#endif
+
+#if defined(HAS_LOG_NEWS)
+#define LOG_FACILITY LOG_NEWS
+#elif defined(HAS_LOG_USER)
+#define LOG_FACILITY LOG_USER
+#endif
+
+#if defined(HAS_LOG_NOTICE)
+#define LOG_NOTICE_LEVEL LOG_NOTICE
+#elif defined(HAS_LOG_WARNING)
+#define LOG_NOTICE_LEVEL LOG_WARNING
+#endif
+
+#if defined(LOG_FACILITY) && defined(HAS_LOG_INFO) && defined(LOG_NOTICE_LEVEL)
+#define USE_SYSTEM_SYSLOG
+#endif
+#endif
+
+/* Include utsname headers or not */
+#ifdef INCLUDE_UTSNAME
+#ifdef HAS_UNAME
+#include <sys/utsname.h>
 #endif
 #endif
 
