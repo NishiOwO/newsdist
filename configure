@@ -657,7 +657,6 @@ check_number () {
 				if test_c "#include <limits.h>\n#if ULONG_MAX != $2\n#error no\n#endif"; then
 					echo "typedef long int$1_t;" >> config.h
 					echo "typedef unsigned long uint$1_t;" >> config.h
-				else
 				fi
 			fi
 		fi
