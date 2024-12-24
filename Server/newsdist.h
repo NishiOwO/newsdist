@@ -57,6 +57,10 @@ CONFIG_DECL int	plain_port;
 #if defined(HAS_WINSOCK)
 #include <winsock2.h>
 #include <ws2tcpip.h>
+
+#ifndef ENETUNREACH
+#define ENETUNREACH WSAENETUNREACH
+#endif
 #elif defined(IS_NETWARE)
 #include <sys/bsdskt.h>
 #include <sys/socket.h>

@@ -55,6 +55,10 @@ for i in $@; do
 	esac
 done
 
+for i in $EXPORTS; do
+	export $i
+done
+
 PRINTF="printf"
 
 OLDIFS="$IFS"
@@ -178,14 +182,20 @@ test_c () {
 		fi
 		rm -f /tmp/$$.c /tmp/$$.o $$.c $$.o
 	else
-		$CC $CFLAGS $LDFLAGS $WERROR -o /tmp/$$ /tmp/$$.c $2 >/dev/null 2>&1
+		$CC $CFLAGS $LDFLAGS $WERROR -o /tmp/$$ /tmp/$$.c $2 >/tmp/log$$ 2>&1
 		if [ "$?" = "0" ]; then
-			echo "yes"
+			grep "No such file" /tmp/log$$ >/dev/null 2>&1
+			if [ "$?" = "0" ]; then
+				echo "no"
+				result=1
+			else
+				echo "yes"
+			fi
 		else
 			echo "no"
 			result=1
 		fi
-		rm -f /tmp/$$.c /tmp/$$.o /tmp/$$ $$ $$.c $$.o
+		rm -f /tmp/log$$ /tmp/$$.c /tmp/$$.o /tmp/$$ $$ $$.c $$.o
 	fi
 	return $result
 }
@@ -356,14 +366,28 @@ else
 	undef "IS_NETWARE"
 fi
 
+log_raw "Is this Watcom: "
+if test_c "#ifndef __WATCOMC__\n#error no\n#endif"; then
+	WATCOM=1
+else
+	WATCOM=0
+fi
+
 info "===== Socket ====="
 
 log_raw "Checking if sys/types.h exists: "
 if test_c "#include <sys/types.h>"; then
-	TYPES="#include <sys/types.h>"
+	TYPES="$TYPES\n#include <sys/types.h>"
 	define "HAS_SYS_TYPES_H"
 else
 	undef "HAS_SYS_TYPES_H"
+fi
+log_raw "Checking if types.h exists: "
+if test_c "#include <types.h>"; then
+	TYPES="$TYPES\n#include <types.h>"
+	define "HAS_TYPES_H"
+else
+	undef "HAS_TYPES_H"
 fi
 
 log_raw "Checking if Winsock 2 exists: "
@@ -494,13 +518,21 @@ else
 	undef "HAS_STRDUP"
 fi
 
+lib () {
+	if [ "$WATCOM" = "1" ]; then
+		echo "$1.lib"
+	else
+		echo "-l$1"
+	fi
+}
+
 log_raw "Checking if libsocket exists: "
-if test_c "int main(int argc, char** argv){return 0;}" "-lsocket"; then
-	LIBS="$LIBS -lsocket"
+if test_c "int main(int argc, char** argv){return 0;}" "`lib socket`"; then
+	LIBS="$LIBS `lib socket`"
 fi
 log_raw "Checking if libws2_32 exists: "
-if test_c "int main(int argc, char** argv){return 0;}" "-lws2_32"; then
-	LIBS="$LIBS -lws2_32"
+if test_c "int main(int argc, char** argv){return 0;}" "`lib ws2_32`"; then
+	LIBS="$LIBS `lib ws2_32`"
 fi
 
 info "===== SSL ====="
