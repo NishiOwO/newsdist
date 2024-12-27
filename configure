@@ -528,7 +528,7 @@ else
 	undef "HAS_IN_ADDR"
 fi
 log_raw "Checking if AF_INET and sockaddr_in exist: "
-if test_c "$TYPES\n#include <$IN_H>\n#include <$SOCKET_H>\nint main(int argc, char** argv){struct sockaddr_in s;return 0;}"; then
+if test_c "#ifndef __NETWARE__\n$TYPES\n#include <$IN_H>\n#include <$SOCKET_H>\nint main(int argc, char** argv){struct sockaddr_in s;return 0;}\n#endif"; then
 	define "HAS_IPV4"
 else
 	undef "HAS_IPV4"
@@ -560,25 +560,13 @@ else
 	if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = soclose;return 0;}"; then
 		echo "#define CLOSE_SOCKET soclose" >> config.h
 	else
-		log_raw "Checking if shutdown exists: "
-		if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = shutdown;return 0;}"; then
-			echo "#define CLOSE_SOCKET(x) shutdown(x, 2)" >> config.h
+		log_raw "Checking if close exists: "
+		if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
+			echo "#define CLOSE_SOCKET close" >> config.h
 		else
-			log_raw "Checking if close exists: "
-			if test_c "$TYPES\n#include <$SOCKET_H>\n#include <unistd.h>\nint main(int argc, char** argv){void* s = close;return 0;}"; then
-				echo "#define CLOSE_SOCKET close" >> config.h
-			else
-				echo "#define CLOSE_SOCKET close" >> config.h
-			fi
+			echo "#define CLOSE_SOCKET close" >> config.h
 		fi
 	fi
-fi
-
-log_raw "Checking if strdup exists: "
-if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
-	define "HAS_STRDUP"
-else
-	undef "HAS_STRDUP"
 fi
 
 lib () {
@@ -596,6 +584,28 @@ fi
 log_raw "Checking if libws2_32 exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "`lib ws2_32`"; then
 	SOCKLIBS="$SOCKLIBS `lib ws2_32`"
+fi
+
+info "===== Utils ====="
+
+log_raw "Checking if strdup exists: "
+if test_c "#include <string.h>\nint main(int argc, char** argv){void* s = strdup;return 0;}"; then
+	define "HAS_STRDUP"
+else
+	undef "HAS_STRDUP"
+fi
+
+log_raw "Checking if CreateProcess exists: "
+if test_c "#include <windows.h>\nint main(int argc, char** argv){void* s = CreateProcess;return 0;}"; then
+	define "HAS_CREATEPROCESS"
+else
+	undef "HAS_CREATEPROCESS"
+	log_raw "Checking if execle exists: "
+	if test_c "#include <unistd.h>\nint main(int argc, char** argv){void* s = execle;return 0;}"; then
+		define "HAS_EXECLE"
+	else
+		undef "HAS_EXECLE"
+	fi
 fi
 
 info "===== SSL ====="
