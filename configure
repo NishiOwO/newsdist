@@ -30,6 +30,8 @@ for i in $@; do
 		echo ""
 		echo "Variables:"
 		echo "  CC                    C compiler"
+		echo "  AR                    Archiver"
+		echo "  RANLIB                Ranlib"
 		echo "  CFLAGS                Flags to be used at compile-time"
 		echo "  LDFLAGS               Flags to be used at link-time"
 		echo "  LIBS                  Libraries to be linked"
@@ -274,6 +276,50 @@ if [ "x$CPP" = "x" ]; then
 	fi
 fi
 
+if [ "x$AR" = "x" ]; then
+	log_raw "Probing archiver: "
+	for c in gar ar; do
+		OLDIFS="$IFS"
+		IFS=":"
+		for i in $PATH; do
+			if [ -f "$i/$c" ]; then
+				AR=$i/$c
+				echo $AR
+				break
+			fi
+		done
+		IFS="$OLDIFS"
+		if [ ! "x$AR" = "x" ]; then
+			break;
+		fi
+	done
+	if [ "x$AR" = "x" ]; then
+		echo "not found"
+	fi
+fi
+
+if [ "x$RANLIB" = "x" ]; then
+	log_raw "Probing ranlib: "
+	for c in granlib ranlib; do
+		OLDIFS="$IFS"
+		IFS=":"
+		for i in $PATH; do
+			if [ -f "$i/$c" ]; then
+				RANLIB=$i/$c
+				echo $RANLIB
+				break
+			fi
+		done
+		IFS="$OLDIFS"
+		if [ ! "x$RANLIB" = "x" ]; then
+			break;
+		fi
+	done
+	if [ "x$RANLIB" = "x" ]; then
+		echo "not found"
+	fi
+fi
+
 if [ "x$CC" = "x" ]; then
 	info "GCC/Clang should work."
 	getinput "What is your C compiler" "cc"
@@ -281,10 +327,19 @@ if [ "x$CC" = "x" ]; then
 fi
 
 if [ "x$CPP" = "x" ]; then
-	info "GCC/Clang should work."
 	info "SCO OUDK cc can be used too"
 	getinput "What is your C preprocessor" "cpp"
 	CPP="$input"
+fi
+
+if [ "x$AR" = "x" ]; then
+	getinput "What is your archiver" "ar"
+	AR="$input"
+fi
+
+if [ "x$RANLIB" = "x" ]; then
+	getinput "What is your ranlib" "ranlib"
+	RANLIB="$input"
 fi
 
 info "===== Flag check ====="
@@ -811,6 +866,8 @@ DEFINES="-DNEWSDIST_VERSION_TEXT='\"NewsDist $VERSION\"' -DNEWSDIST_VERSION='\"$
 
 echo "# This file is auto-generated" > config.mk
 echo "CC = $CC" >> config.mk
+echo "AR = $AR" >> config.mk
+echo "RANLIB = $RANLIB" >> config.mk
 echo "CPP = $CPP $DEFINES -DPREFIX_RAW=$PREFIX" >> config.mk
 echo "CFLAGS = $CFLAGS $DEFINES" >> config.mk
 echo "LDFLAGS = $LDFLAGS" >> config.mk

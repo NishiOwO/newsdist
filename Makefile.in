@@ -2,7 +2,7 @@
 
 include config.mk
 
-DIRS = ./Server ./Document
+DIRS = ./Server ./Document ./Common
 DESTDIR =
 
 .PHONY: all install distclean clean $(DIRS) maintainer
@@ -11,7 +11,10 @@ FLAGS = TOPDIR=.. DESTDIR=$(DESTDIR) @EXPORTS@
 
 all: $(DIRS)
 
-./Server ./Document::
+./Server:: ./Common
+	$(MAKE) -C $@ $(FLAGS)
+
+./Common ./Document::
 	$(MAKE) -C $@ $(FLAGS)
 
 maintainer:

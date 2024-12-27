@@ -1,0 +1,19 @@
+#!/bin/sh
+# $Id$
+first=1
+output=""
+input=""
+for i in $@; do
+	if [ "$i" = "rc" ]; then
+		continue
+	fi
+	if [ "$first" = "1" ]; then
+		output="$i"
+	else
+		input="$input +$i"
+	fi
+	first=0
+done
+CMD="wlib -q -b -n -fo $output $input"
+echo "$0: $CMD"
+exec $CMD

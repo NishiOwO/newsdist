@@ -1,5 +1,8 @@
 # $Id$
-CC="owcc"
+CC=owcc
+AR=../Compat/wlib-ar
+RANLIB=true
+
 CFLAGS="-b win32 -I $WATCOM/h/nt"
 LDFLAGS="-b win32 -L $WATCOM/lib386/nt"
 EXEC=.exe

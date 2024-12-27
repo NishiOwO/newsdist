@@ -3,7 +3,10 @@ NOVELLNDK=/usr/novell/clib
 INCLUDE=/usr/novell/clib/include:/usr/novell/clib/include/nlm
 EXPORTS="NOVELLNDK INCLUDE"
 
-CC="owcc"
+CC=owcc
+AR=../Compat/wlib-ar
+RANLIB=true
+
 CFLAGS="-b netware_clib_lite -DN_PLAT_NLM"
 LDFLAGS="-b netware_clib_lite"
 EXEC=.nlm

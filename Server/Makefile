@@ -4,6 +4,7 @@ include $(TOPDIR)/config.mk
 
 OBJS  = main.o log.o server.o socket.o util.o
 OBJS += yconf.tab.o yconf.yy.o
+OBJS += ../Common/common.a
 
 .PHONY: all install clean
 .SUFFIXES: .c .o
