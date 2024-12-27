@@ -33,6 +33,8 @@ for i in $@; do
 		echo "  CFLAGS                Flags to be used at compile-time"
 		echo "  LDFLAGS               Flags to be used at link-time"
 		echo "  LIBS                  Libraries to be linked"
+		echo "  SOCKLIBS              Libraries to be linked for sockets"
+		echo "  SSLLIBS               Libraries to be linked for SSL"
 		echo "  YACC                  Yacc"
 		echo "  LEX                   Lex"
 		echo ""
@@ -534,11 +536,11 @@ lib () {
 
 log_raw "Checking if libsocket exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "`lib socket`"; then
-	LIBS="$LIBS `lib socket`"
+	SOCKLIBS="$SOCKLIBS `lib socket`"
 fi
 log_raw "Checking if libws2_32 exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "`lib ws2_32`"; then
-	LIBS="$LIBS `lib ws2_32`"
+	SOCKLIBS="$SOCKLIBS `lib ws2_32`"
 fi
 
 info "===== SSL ====="
@@ -546,7 +548,7 @@ info "===== SSL ====="
 log_raw "Checking if OpenSSL works: "
 if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = SSL_CTX_new;return 0;}" "-lcrypto -lssl"; then
 	define "HAS_OPENSSL"
-	LIBS="$LIBS -lcrypto -lssl"
+	SSLLIBS="$SSLLIBS -lcrypto -lssl"
 	SSL="openssl"
 	log_raw "Checking if TLS_server_method exists: "
 	if test_c "#include <openssl/ssl.h>\nint main(int argc, char** argv){void* s = TLS_server_method;return 0;}"; then
@@ -813,6 +815,8 @@ echo "CPP = $CPP $DEFINES -DPREFIX_RAW=$PREFIX" >> config.mk
 echo "CFLAGS = $CFLAGS $DEFINES" >> config.mk
 echo "LDFLAGS = $LDFLAGS" >> config.mk
 echo "LIBS = $LIBS" >> config.mk
+echo "SOCKLIBS = $SOCKLIBS" >> config.mk
+echo "SSLLIBS = $SSLLIBS" >> config.mk
 echo "TOPDIR = `pwd`" >> config.mk
 echo "EXEC = $EXEC" >> config.mk
 echo "YACC = $YACC" >> config.mk

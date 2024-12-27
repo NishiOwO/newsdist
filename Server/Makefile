@@ -11,7 +11,7 @@ OBJS += yconf.tab.o yconf.yy.o
 all: newsdist$(EXEC)
 
 newsdist$(EXEC): $(OBJS)
-	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS)
+	$(CC) $(LDFLAGS) -o $@ $(OBJS) $(LIBS) $(SOCKLIBS) $(SSLLIBS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c -o $@ $<
