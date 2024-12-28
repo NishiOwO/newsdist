@@ -12,7 +12,25 @@
 #include <openssl/opensslv.h>
 #include <openssl/ssl.h>
 const char     *nd_sslver = OPENSSL_VERSION_TEXT;
+
+SSL_CTX	       *openssl_ctx;
 #endif
+
+void
+nd_init_ssl(void)
+{
+#ifdef HAS_OPENSSL
+	const void     *method = nd_create_method();
+
+	SSL_load_error_strings();
+	SSL_library_init();
+	OpenSSL_add_all_algorithms();
+
+	openssl_ctx = SSL_CTX_new(method);
+	SSL_CTX_use_PrivateKey_file(openssl_ctx, ssl_key, SSL_FILETYPE_PEM);
+	SSL_CTX_use_certificate_file(openssl_ctx, ssl_cert, SSL_FILETYPE_PEM);
+#endif
+}
 
 const void *
 nd_create_method(void)
@@ -41,25 +59,16 @@ nd_create_method(void)
 void
 nd_create_ssl(nd_pass_t *pass)
 {
-	const void     *method;
 
 	pass->ssl = malloc(sizeof(*pass->ssl));
 #ifdef HAS_OPENSSL
-	method = nd_create_method();
-	if (method == NULL) {
-		free(pass->ssl);
-		pass->ssl = NULL;
-		return;
-	}
-	pass->ssl->ctx = SSL_CTX_new(method);
-	pass->ssl->ssl = SSL_new(pass->ssl->ctx);
-	SSL_use_PrivateKey_file(pass->ssl->ssl, "", SSL_FILETYPE_PEM);
-	SSL_use_certificate_file(pass->ssl->ssl, "", SSL_FILETYPE_PEM);
+	pass->ssl->ssl = SSL_new(openssl_ctx);
 	SSL_set_fd(pass->ssl->ssl, pass->sock);
 	if (SSL_accept(pass->ssl->ssl) <= 0) {
 		SSL_free(pass->ssl->ssl);
 		free(pass->ssl);
 		pass->ssl = NULL;
+		nd_log_notice("SSL failure");
 	}
 #endif
 }
@@ -72,6 +81,9 @@ nd_close_socket(nd_pass_t *pass)
 		SSL_shutdown(pass->ssl->ssl);
 		SSL_free(pass->ssl->ssl);
 #endif
+		free(pass->ssl);
+		pass->ssl = NULL;
+		pass->do_ssl = 0;
 	}
 	CLOSE_SOCKET(pass->sock);
 }

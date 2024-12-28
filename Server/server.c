@@ -251,7 +251,7 @@ nd_loop_server(void)
 							for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
 								if (server_sockets[i] == NO_SOCKET)
 									continue;
-								CLOSE_SOCKET(sock);
+								CLOSE_SOCKET(server_sockets[i]);
 							}
 
 							nd_pass(ptr);

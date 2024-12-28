@@ -156,6 +156,7 @@ thread_stuff(void *pargs)
 	}
 	fclose(yyconfin);
 	nd_init_log();
+	nd_init_ssl();
 #ifdef HAS_NW_BEGINTHREAD
 	if (nd_init_server() != 0)
 		return;

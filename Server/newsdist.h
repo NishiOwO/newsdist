@@ -19,7 +19,6 @@
 
 struct nd_ssl_struct {
 	void	       *ssl;
-	void	       *ctx;
 };
 
 typedef struct nd_ssl_struct nd_ssl_t;
@@ -47,6 +46,7 @@ const void *	nd_create_method(void);
 const char *	nd_get_ssl_version(void);
 void		nd_close_socket(nd_pass_t * pass);
 int		nd_accept_ssl(nd_pass_t * pass);
+void		nd_init_ssl(void);
 
 /* util.c */
 char *		nd_strdup(const char *str);

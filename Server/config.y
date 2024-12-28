@@ -3,6 +3,8 @@
  */
 
 %{
+#include <stdlib.h>
+
 #define CONFIG_IMPLEMENTATION
 #include "newsdist.h"
 
@@ -33,9 +35,12 @@ component	: WELCOME SPACES STRING NEWLINE
 	ssl_port = $<number>3;
 }
 		| SSLKEY SPACES STRING NEWLINE {
+	if(ssl_key != NULL) free(ssl_key);
+	ssl_key = $<string>3;
 }
 		| SSLCERT SPACES STRING NEWLINE {
-	printf("%s\n", $<string>3);
+	if(ssl_cert != NULL) free(ssl_cert);
+	ssl_cert = $<string>3;
 }
 		| NEWLINE;
 		;
