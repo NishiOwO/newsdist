@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#define INCLUDE_SIGNAL
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -155,6 +157,12 @@ thread_stuff(void *pargs)
 #endif
 	}
 	fclose(yyconfin);
+#ifdef HAS_SIGCHLD
+	signal(SIGCHLD, SIG_IGN);
+#endif
+#ifdef HAS_SIGPIPE
+	signal(SIGPIPE, SIG_IGN);
+#endif
 	nd_init_log();
 	nd_init_ssl();
 #ifdef HAS_NW_BEGINTHREAD
@@ -175,7 +183,7 @@ thread_stuff(void *pargs)
 #endif
 		}
 	} else {
-		printf("Not daemonizing\n");
+		nd_log_info("Not daemonizing");
 	}
 #endif
 #ifdef HAS_NW_BEGINTHREAD

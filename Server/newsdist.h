@@ -173,4 +173,11 @@ extern int	errno;
 #endif
 #endif
 
+/* Include signal headers or not */
+#ifdef INCLUDE_SIGNAL
+#ifdef HAS_SIGNAL_H
+#include <signal.h>
+#endif
+#endif
+
 #endif

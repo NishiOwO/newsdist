@@ -569,6 +569,13 @@ else
 	fi
 fi
 
+log_raw "Checking if SIGPIPE exists: "
+if test_c "#include <signal.h>\nint main(int argc, char** argv){(void)SIGPIPE;return 0;}"; then
+	define "HAS_SIGPIPE"
+else
+	undef "HAS_SIGPIPE"
+fi
+
 lib () {
 	if [ "$WATCOM" = "1" ]; then
 		echo "$1.lib"
@@ -606,6 +613,13 @@ else
 	else
 		undef "HAS_EXECLE"
 	fi
+fi
+
+log_raw "Checking if signal.h exists: "
+if test_c "#include <signal.h>"; then
+	define "HAS_SIGNAL_H"
+else
+	undef "HAS_SIGNAL_H"
 fi
 
 info "===== SSL ====="
@@ -723,9 +737,17 @@ info "===== Multi-socket ====="
 log_raw "Checking if fork exists: "
 if test_c "#include <unistd.h>\nint main(int argc, char** argv){void* s = fork;return 0;}"; then
 	define "HAS_FORK"
+	log_raw "Checking if SIGCHLD exists: "
+	if test_c "#include <signal.h>\nint main(int argc, char** argv){(void)SIGCHLD;return 0;}"; then
+		define "HAS_SIGCHLD"
+	else
+		undef "HAS_SIGCHLD"
+	fi
 else
 	undef "HAS_FORK"
+	undef "HAS_SIGCHLD"
 fi
+
 log_raw "Checking if _beginthread exists: "
 if test_c "#include <process.h>\nint main(int argc, char** argv){void* s = _beginthread;return 0;}"; then
 	define "HAS_BEGINTHREAD"
