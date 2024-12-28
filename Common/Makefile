@@ -10,7 +10,7 @@ OBJS  = db.o
 all: common.a
 
 common.a: $(OBJS)
-	$(AR) -rc $@ $(OBJS)
+	$(AR) rc $@ $(OBJS)
 	$(RANLIB) $@
 
 .c.o:
