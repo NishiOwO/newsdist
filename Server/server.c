@@ -142,8 +142,10 @@ nd_pass(void *tptr)
 {
 	nd_pass_t      *ptr = (nd_pass_t *) tptr;
 
-	CLOSE_SOCKET(ptr->sock);
-	free(ptr);
+	if (nd_accept_ssl(ptr) >= 0) {
+		nd_close_socket(ptr);
+		free(ptr);
+	}
 #ifdef HAS_NW_BEGINTHREAD
 	ExitThread(EXIT_THREAD, 0);
 #endif
@@ -226,13 +228,13 @@ nd_loop_server(void)
 #endif
 #ifdef HAS_IPV4
 					/* IPv4 connection */
-					if (!(i & 1)) {
+					if (!(i & ND_IPV6_MASK)) {
 						sock = accept(server_sockets[i], (struct sockaddr *)&inet4, &cl4);
 					}
 #endif
 #ifdef HAS_IPV6
 					/* IPv6 connection */
-					if (i & 1) {
+					if (i & ND_IPV6_MASK) {
 						sock = accept(server_sockets[i], (struct sockaddr *)&inet6, &cl6);
 					}
 #endif
@@ -241,7 +243,9 @@ nd_loop_server(void)
 						/* Process socket here */
 						nd_pass_t      *ptr = malloc(sizeof(*ptr));
 
+						ptr->do_ssl = i & ND_SSL_MASK;
 						ptr->sock = sock;
+						ptr->serverindex = i;
 #if defined(HAS_FORK)
 						if (fork() == 0) {
 							for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {

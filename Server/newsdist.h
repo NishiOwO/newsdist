@@ -14,6 +14,25 @@
 #include <sys/types.h>
 #endif
 
+#define ND_IPV6_MASK 1
+#define ND_SSL_MASK  2
+
+struct nd_ssl_struct {
+	void	       *ssl;
+	void	       *ctx;
+};
+
+typedef struct nd_ssl_struct nd_ssl_t;
+
+struct nd_pass_struct {
+	int		serverindex;	/* server_sockets[n] */
+	int		sock;
+	nd_ssl_t       *ssl;
+	int		do_ssl;
+};
+
+typedef struct nd_pass_struct nd_pass_t;
+
 /* log.c */
 void		nd_init_log(void);
 void		nd_log_info(const char *info);
@@ -26,24 +45,12 @@ int		nd_loop_server(void);
 /* socket.c */
 const void *	nd_create_method(void);
 const char *	nd_get_ssl_version(void);
+void		nd_close_socket(nd_pass_t * pass);
+int		nd_accept_ssl(nd_pass_t * pass);
 
 /* util.c */
 char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
-
-struct nd_ssl_struct {
-	void	       *ssl;
-	void	       *ctx;
-};
-
-typedef struct nd_ssl_struct nd_ssl_t;
-
-struct nd_pass_struct {
-	int		sock;
-	nd_ssl_t       *ssl;
-};
-
-typedef struct nd_pass_struct nd_pass_t;
 
 /* Config implementation */
 #ifdef CONFIG_IMPLEMENTATION
@@ -54,10 +61,14 @@ typedef struct nd_pass_struct nd_pass_t;
 
 CONFIG_DECL int	ssl_port;
 CONFIG_DECL int	plain_port;
+CONFIG_DECL char *ssl_key;
+CONFIG_DECL char *ssl_cert;
 
 #define CONFIG_ASSIGN_DEFAULT \
 	ssl_port = 563; \
-	plain_port = 119;
+	plain_port = 119; \
+	ssl_key = NULL; \
+	ssl_cert = NULL;
 
 /* Include socket headers or not */
 #ifdef INCLUDE_SOCKET
