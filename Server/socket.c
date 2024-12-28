@@ -5,6 +5,7 @@
 #include "newsdist.h"
 
 #include <stddef.h>
+#include <stdlib.h>
 
 #ifdef HAS_OPENSSL
 #include <openssl/opensslv.h>
@@ -33,6 +34,27 @@ nd_create_method(void)
 #endif
 #else
 	return NULL;
+#endif
+}
+
+void
+nd_create_ssl(nd_pass_t *pass)
+{
+	const void     *method;
+
+	pass->ssl = malloc(sizeof(*pass->ssl));
+#ifdef HAS_OPENSSL
+	method = nd_create_method();
+	if (method == NULL) {
+		free(pass->ssl);
+		pass->ssl = NULL;
+		return;
+	}
+	pass->ssl->ctx = SSL_CTX_new(method);
+	pass->ssl->ssl = SSL_new(pass->ssl->ctx);
+	SSL_set_fd(pass->ssl->ssl, pass->sock);
+	SSL_use_PrivateKey_file(pass->ssl->ssl, "", SSL_FILETYPE_PEM);
+	SSL_use_certificate_file(pass->ssl->ssl, "", SSL_FILETYPE_PEM);
 #endif
 }
 

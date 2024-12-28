@@ -31,8 +31,16 @@ const char *	nd_get_ssl_version(void);
 char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
 
+struct nd_ssl_struct {
+	void	       *ssl;
+	void	       *ctx;
+};
+
+typedef struct nd_ssl_struct nd_ssl_t;
+
 struct nd_pass_struct {
 	int		sock;
+	nd_ssl_t       *ssl;
 };
 
 typedef struct nd_pass_struct nd_pass_t;
