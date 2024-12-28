@@ -229,7 +229,6 @@ trap quit 2
 log ""
 log "Welcome to NewsDist build environment configuration utility."
 log "NewsDist is a small (enough) NNTP server."
-log "         is under public-domain."
 log ""
 
 if [ "x$CC" = "x" ]; then

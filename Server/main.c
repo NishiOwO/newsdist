@@ -76,7 +76,6 @@ thread_stuff(void *pargs)
 
 	printf("NewsDist NNTP daemon - NewsDist/%s, system = %s\n", NEWSDIST_VERSION, (buffer = nd_get_system()));
 	free(buffer);
-	printf("Under public-domain, original by Nishi <nishi@nishi.boats>.\n");
 	printf("\n");
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
