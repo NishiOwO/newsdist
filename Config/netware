@@ -1,6 +1,6 @@
 # $Id$
 NOVELLNDK=/usr/novell/clib
-INCLUDE=/usr/novell/clib/include:/usr/novell/clib/include/nlm
+INCLUDE=$NOVELLNDK/include:$NOVELLNDK/include/nlm
 EXPORTS="NOVELLNDK INCLUDE"
 
 CC=owcc
