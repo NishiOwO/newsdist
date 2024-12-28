@@ -338,6 +338,7 @@ if [ "x$AR" = "x" ]; then
 fi
 
 if [ "x$RANLIB" = "x" ]; then
+	info "If you are using SCO OUDK ar, pass true"
 	getinput "What is your ranlib" "ranlib"
 	RANLIB="$input"
 fi
