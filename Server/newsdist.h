@@ -63,12 +63,14 @@ CONFIG_DECL int	ssl_port;
 CONFIG_DECL int	plain_port;
 CONFIG_DECL char *ssl_key;
 CONFIG_DECL char *ssl_cert;
+CONFIG_DECL char *welcome_text;
 
 #define CONFIG_ASSIGN_DEFAULT \
 	ssl_port = 563; \
 	plain_port = 119; \
 	ssl_key = NULL; \
-	ssl_cert = NULL;
+	ssl_cert = NULL; \
+	welcome_text = NULL;
 
 /* Include socket headers or not */
 #ifdef INCLUDE_SOCKET
