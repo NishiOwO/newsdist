@@ -2,7 +2,7 @@
 
 include $(TOPDIR)/config.mk
 
-OBJS  = 
+OBJS  = db.o
 
 .PHONY: all install clean
 .SUFFIXES: .c .o
@@ -10,7 +10,7 @@ OBJS  =
 all: common.a
 
 common.a: $(OBJS)
-	$(AR) rc $@ $(OBJS)
+	$(AR) -rc $@ $(OBJS)
 	$(RANLIB) $@
 
 .c.o:
