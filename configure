@@ -464,6 +464,7 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 	TCP_H="winsock2.h"
 	IN_H="winsock2.h"
 	INET_H="winsock2.h"
+	TYPES="$TYPES\n#include <ws2tcpip.h>"
 else
 	undef "HAS_WINSOCK"
 fi
