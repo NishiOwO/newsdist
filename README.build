@@ -4,6 +4,9 @@ NewsDist currently supports these platforms:
  - NetBSD             (Checked working on amd64 10.0)
  - Debian GNU/Linux   (Checked working on x86_64 12)
  - NetWare            (Checked working on 6.5 SP8)
+ - SCO UnixWare 7     (Checked working on 7 Definitive)
+   Note: You will have to build recent Berkeley Yacc and Flex to get it
+         working.
 
 NewsDist might work on these platforms, but they are left as is:
  - Windows x86/x86_64
@@ -12,9 +15,6 @@ NewsDist might work on these platforms, but they are left as is:
  - OS/2
    Note: You can pass `Config/os2' to `./configure' to build for this
          platform.
- - SCO UnixWare 7     (Checked working on 7 Definitive)
-   Note: You will have to build recent Berkeley Yacc and Flex to get it
-         working. (This is known)
 
 And it might build on other *nix platforms, but I haven't tested on other 
 platforms.
