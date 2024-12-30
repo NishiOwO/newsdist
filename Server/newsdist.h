@@ -53,6 +53,7 @@ int		nd_write(nd_pass_t * pass, void *buffer, int size);
 /* util.c */
 char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
+char *		nd_gethostname(void);
 
 /* Config implementation */
 #ifdef CONFIG_IMPLEMENTATION
@@ -105,6 +106,9 @@ struct sockaddr_in {
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
 #include <netinet/in.h>
+#ifdef IS_OS2
+#include <tcpustd.h>
+#endif
 #ifdef HAS_POLL
 #include <sys/poll.h>
 #endif

@@ -3,6 +3,7 @@
  */
 
 #define INCLUDE_UTSNAME
+#define INCLUDE_SOCKET
 
 #include <stdlib.h>
 #include <string.h>
@@ -52,3 +53,20 @@ htons(uint16_t n) {
 	return ((n >> 8) & 0xff) | ((n << 8) & 0xff00);
 }
 #endif
+
+char *
+nd_gethostname(void)
+{
+	char	       *host = malloc(513);
+#if defined(HAS_GETHOSTNAME)
+	gethostname(host, 512);
+#elif defined(HAS_UNAME)
+	struct utsname	u;
+
+	uname(&u);
+	strcpy(host, u.nodename);
+#else
+	strcpy(host, "unknown");
+#endif
+	return host;
+}

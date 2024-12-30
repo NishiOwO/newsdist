@@ -412,6 +412,7 @@ SOCKET_H="sys/socket.h"
 TCP_H="netinet/tcp.h"
 IN_H="netinet/in.h"
 INET_H="arpa/inet.h"
+TCPUSTD_H="unistd.h"
 
 info "===== Check platform ====="
 
@@ -431,6 +432,7 @@ fi
 log_raw "Is this OS/2 build: "
 if test_c "#ifndef __OS2__\n#error no\n#endif"; then
 	define "IS_OS2"
+	TCPUSTD_H="tcpustd.h"
 else
 	undef "IS_OS2"
 fi
@@ -468,6 +470,7 @@ if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; t
 	TCP_H="winsock2.h"
 	IN_H="winsock2.h"
 	INET_H="winsock2.h"
+	TCPUSTD_H="winsock2.h"
 	TYPES="$TYPES\n#include <ws2tcpip.h>"
 else
 	undef "HAS_WINSOCK"
@@ -512,6 +515,13 @@ if test_c "$TYPES\n#include <$POLL_H>\nint main(int argc, char** argv){void* s =
 	define "HAS_POLL"
 else
 	undef "HAS_POLL"
+fi
+
+log_raw "Checking if gethostname exists: "
+if test_c "$TYPES\n#include <$TCPUSTD_H>\nint main(int argc, char** argv){void* s = gethostname;return 0;}"; then
+	define "HAS_GETHOSTNAME"
+else
+	undef "HAS_GETHOSTNAME"
 fi
 
 log_raw "Checking if IPPROTO_TCP exists: "
