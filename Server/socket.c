@@ -16,7 +16,7 @@ const char     *nd_sslver = OPENSSL_VERSION_TEXT;
 SSL_CTX	       *openssl_ctx;
 #endif
 
-void
+int
 nd_init_ssl(void)
 {
 #ifdef HAS_OPENSSL
@@ -26,9 +26,19 @@ nd_init_ssl(void)
 	SSL_library_init();
 	OpenSSL_add_all_algorithms();
 
-	openssl_ctx = SSL_CTX_new(method);
-	SSL_CTX_use_PrivateKey_file(openssl_ctx, ssl_key, SSL_FILETYPE_PEM);
-	SSL_CTX_use_certificate_file(openssl_ctx, ssl_cert, SSL_FILETYPE_PEM);
+	if ((openssl_ctx = SSL_CTX_new(method)) == NULL)
+		return -1;
+	if (SSL_CTX_use_PrivateKey_file(openssl_ctx, ssl_key, SSL_FILETYPE_PEM) <= 0) {
+		SSL_CTX_free(openssl_ctx);
+		return -1;
+	}
+	if (SSL_CTX_use_certificate_file(openssl_ctx, ssl_cert, SSL_FILETYPE_PEM) <= 0) {
+		SSL_CTX_free(openssl_ctx);
+		return -1;
+	}
+	return 0;
+#else
+	return 0;
 #endif
 }
 

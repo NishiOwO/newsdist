@@ -163,7 +163,10 @@ thread_stuff(void *pargs)
 	signal(SIGPIPE, SIG_IGN);
 #endif
 	nd_init_log();
-	nd_init_ssl();
+	if (nd_init_ssl() < 0) {
+		nd_log_notice("SSL initialization fail");
+		return 1;
+	}
 #ifdef HAS_NW_BEGINTHREAD
 	if (nd_init_server() != 0)
 		return;
