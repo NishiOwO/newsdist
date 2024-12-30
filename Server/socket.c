@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#define INCLUDE_SOCKET
+
 #include "newsdist.h"
 
 #include <stddef.h>
@@ -64,6 +66,34 @@ nd_create_method(void)
 #else
 	return NULL;
 #endif
+}
+
+int
+nd_read(nd_pass_t *pass, void *buffer, int size)
+{
+	if (pass->do_ssl) {
+#ifdef HAS_OPENSSL
+		return SSL_read(pass->ssl->ssl, buffer, size);
+#else
+		return -1;
+#endif
+	} else {
+		return recv(pass->sock, buffer, size, 0);
+	}
+}
+
+int
+nd_write(nd_pass_t *pass, void *buffer, int size)
+{
+	if (pass->do_ssl) {
+#ifdef HAS_OPENSSL
+		return SSL_write(pass->ssl->ssl, buffer, size);
+#else
+		return -1;
+#endif
+	} else {
+		return send(pass->sock, buffer, size, 0);
+	}
 }
 
 void

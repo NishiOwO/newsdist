@@ -246,6 +246,7 @@ nd_loop_server(void)
 						ptr->do_ssl = i & ND_SSL_MASK;
 						ptr->sock = sock;
 						ptr->serverindex = i;
+						ptr->ssl = NULL;
 #if defined(HAS_FORK)
 						if (fork() == 0) {
 							for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]); i++) {
