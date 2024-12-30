@@ -57,10 +57,12 @@ nd_init_server(void)
 
 #ifdef HAS_SSL
 #ifdef HAS_IPV4
-	server_sockets[SECURE] = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+	if (ssl_key != NULL && ssl_cert != NULL)
+		server_sockets[SECURE] = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 #endif
 #ifdef HAS_IPV6
-	server_sockets[SECURE6] = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
+	if (ssl_key != NULL && ssl_cert != NULL)
+		server_sockets[SECURE6] = socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
 #endif
 #endif
 

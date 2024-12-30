@@ -21,8 +21,15 @@ SSL_CTX	       *openssl_ctx;
 int
 nd_init_ssl(void)
 {
+	const void     *method;
+#ifdef HAS_SSL
+	if (ssl_key == NULL || ssl_cert == NULL) {
+		nd_log_info("SSLKey and/or SSLCertificate not specified, SSL not used");
+		return 0;
+	}
+#endif
 #ifdef HAS_OPENSSL
-	const void     *method = nd_create_method();
+	method = nd_create_method();
 
 	SSL_load_error_strings();
 	SSL_library_init();
