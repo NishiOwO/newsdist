@@ -2,6 +2,7 @@
 # $Id$
 CONFIG="GET"
 OLD=`pwd`
+
 . ./configure
 make distclean || true
 echo "Packing for version $VERSION"
