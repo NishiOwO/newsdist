@@ -1,3 +1,4 @@
+
 /**
  * $Id$
  */
@@ -10,25 +11,25 @@
 
 #include "newsdist.h"
 
-char *
+char           *
 nd_strdup(const char *str)
 {
 #ifdef HAS_STRDUP
 	return strdup(str);
 #else
-	char	       *r = malloc(strlen(str) + 1);
+	char           *r = malloc(strlen(str) + 1);
 
 	strcpy(r, str);
 	return r;
 #endif
 }
 
-char *
+char           *
 nd_get_system(void)
 {
 #if defined(HAS_UNAME)
-	struct utsname	u;
-	char	       *name = malloc(512);
+	struct utsname  u;
+	char           *name = malloc(512);
 
 	name[0] = 0;
 	uname(&u);
@@ -49,19 +50,21 @@ nd_get_system(void)
 
 #ifndef HAS_HTONS
 uint16_t
-htons(uint16_t n) {
+htons(uint16_t n)
+{
 	return ((n >> 8) & 0xff) | ((n << 8) & 0xff00);
 }
 #endif
 
-char *
+char           *
 nd_gethostname(void)
 {
-	char	       *host = malloc(513);
+	char           *host = malloc(513);
+
 #if defined(HAS_GETHOSTNAME)
 	gethostname(host, 512);
 #elif defined(HAS_UNAME)
-	struct utsname	u;
+	struct utsname  u;
 
 	uname(&u);
 	strcpy(host, u.nodename);
@@ -71,4 +74,8 @@ nd_gethostname(void)
 	return host;
 }
 
-
+char           *
+nd_format(const char *str)
+{
+	return NULL;
+}

@@ -1,3 +1,4 @@
+
 /**
  * $Id$
  */
@@ -17,21 +18,21 @@
 #include <nwconio.h>
 #endif
 
-char	       *confpath = PREFIX "/etc/newsdist.conf";
+char           *confpath = PREFIX "/etc/newsdist.conf";
 
-int		yyconfparse(void);
+int             yyconfparse(void);
 extern FILE    *yyconfin;
-extern int	enable_stderr_log;
-extern int	enable_syslog;
+extern int      enable_stderr_log;
+extern int      enable_syslog;
 
 #ifdef HAS_NW_BEGINTHREAD
-void		thread_stuff(void *pargs);
+void            thread_stuff(void *pargs);
 #else
-int		thread_stuff(void *pargs);
+int             thread_stuff(void *pargs);
 #endif
 struct arg_struct {
-	int		argc;
-	char	      **argv;
+	int             argc;
+	char          **argv;
 };
 
 int
@@ -62,39 +63,53 @@ int
 thread_stuff(void *pargs)
 {
 #endif
-	int		argc = ((struct arg_struct *)pargs)->argc;
-	char	      **argv = ((struct arg_struct *)pargs)->argv;
-	int		i;
-	char	       *buffer;
+	int             argc = ((struct arg_struct *) pargs)->argc;
+	char          **argv = ((struct arg_struct *) pargs)->argv;
+	int             i;
+	char           *buffer;
+
 #ifdef HAS_FORK
-	int		daemonize = 1;
+	int             daemonize = 1;
 #else
-	int		daemonize = 0;
+	int             daemonize = 0;
 #endif
 
 	CONFIG_ASSIGN_DEFAULT;
 
-	printf("NewsDist NNTP daemon - NewsDist/%s, system = %s\n", NEWSDIST_VERSION, (buffer = nd_get_system()));
+	printf("NewsDist NNTP daemon - NewsDist/%s, system = %s\n",
+	       NEWSDIST_VERSION, (buffer = nd_get_system()));
 	free(buffer);
 	printf("\n");
 	for (i = 1; i < argc; i++) {
 		if (argv[i][0] == '-') {
-			if (strcmp(argv[i], "--version") == 0 || strcmp(argv[i], "-V") == 0) {
+			if (strcmp(argv[i], "--version") == 0
+			    || strcmp(argv[i], "-V") == 0) {
 				const char     *defines[] = DEFINES;
-				int		j;
-				int		k;
-				int		maxlen = 0;
+				int             j;
+				int             k;
+				int             maxlen = 0;
 
 				printf("Configuration:\n");
-				for (j = 0; j < sizeof(defines) / sizeof(defines[0]); j++) {
-					if ((strlen(defines[j]) + 1) > maxlen)
-						maxlen = strlen(defines[j]) + 1;
+				for (j = 0;
+				     j <
+				     sizeof(defines) / sizeof(defines[0]);
+				     j++) {
+					if ((strlen(defines[j]) + 1) >
+					    maxlen)
+						maxlen =
+						    strlen(defines[j]) + 1;
 				}
-				for (j = 0; j < sizeof(defines) / sizeof(defines[0]); j++) {
+				for (j = 0;
+				     j <
+				     sizeof(defines) / sizeof(defines[0]);
+				     j++) {
 					if ((j % 3) == 0)
 						printf("    ");
 					printf("%s", defines[j]);
-					for (k = 0; k < maxlen - strlen(defines[j]); k++)
+					for (k = 0;
+					     k <
+					     maxlen - strlen(defines[j]);
+					     k++)
 						printf(" ");
 					if ((j + 1) % 3 == 0)
 						printf("\n");
@@ -106,30 +121,40 @@ thread_stuff(void *pargs)
 #else
 				return 0;
 #endif
-			} else if (strcmp(argv[i], "--config") == 0 || strcmp(argv[i], "-C") == 0) {
-				confpath = argv[(long)i + 1];
+			} else if (strcmp(argv[i], "--config") == 0
+				   || strcmp(argv[i], "-C") == 0) {
+				confpath = argv[(long) i + 1];
 				if (confpath == NULL) {
-					fprintf(stderr, "%s requires an argument\n", argv[i]);
+					fprintf(stderr,
+						"%s requires an argument\n",
+						argv[i]);
 #ifdef HAS_NW_BEGINTHREAD
 					return;
 #else
 					return 1;
 #endif
 				}
-			} else if (strcmp(argv[i], "--stderr-log") == 0 || strcmp(argv[i], "-S") == 0) {
+			} else if (strcmp(argv[i], "--stderr-log") == 0
+				   || strcmp(argv[i], "-S") == 0) {
 				enable_stderr_log = 1;
-			} else if (strcmp(argv[i], "--no-stderr-log") == 0 || strcmp(argv[i], "-s") == 0) {
+			} else if (strcmp(argv[i], "--no-stderr-log") == 0
+				   || strcmp(argv[i], "-s") == 0) {
 				enable_stderr_log = 0;
-			} else if (strcmp(argv[i], "--syslog") == 0 || strcmp(argv[i], "-L") == 0) {
+			} else if (strcmp(argv[i], "--syslog") == 0
+				   || strcmp(argv[i], "-L") == 0) {
 				enable_syslog = 1;
-			} else if (strcmp(argv[i], "--no-syslog") == 0 || strcmp(argv[i], "-l") == 0) {
+			} else if (strcmp(argv[i], "--no-syslog") == 0
+				   || strcmp(argv[i], "-l") == 0) {
 				enable_syslog = 0;
-			} else if (strcmp(argv[i], "--daemon") == 0 || strcmp(argv[i], "-d") == 0) {
+			} else if (strcmp(argv[i], "--daemon") == 0
+				   || strcmp(argv[i], "-d") == 0) {
 				daemonize = 1;
-			} else if (strcmp(argv[i], "--foreground") == 0 || strcmp(argv[i], "-f") == 0) {
+			} else if (strcmp(argv[i], "--foreground") == 0
+				   || strcmp(argv[i], "-f") == 0) {
 				daemonize = 0;
 			} else {
-				fprintf(stderr, "Invalid flag: %s\n", argv[i]);
+				fprintf(stderr, "Invalid flag: %s\n",
+					argv[i]);
 #ifdef HAS_NW_BEGINTHREAD
 				return;
 #else
@@ -140,7 +165,8 @@ thread_stuff(void *pargs)
 	}
 	yyconfin = fopen(confpath, "r");
 	if (yyconfin == NULL) {
-		fprintf(stderr, "Could not open the config: %s\n", confpath);
+		fprintf(stderr, "Could not open the config: %s\n",
+			confpath);
 #ifdef HAS_NW_BEGINTHREAD
 		return;
 #else

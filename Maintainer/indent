@@ -3,18 +3,25 @@
 
 . ./Maintainer/tools.sh
 
+indent --version | grep GNU >/dev/null 2>&1
+if [ "$?" = "0" ]; then
+	ORIG="-orig"
+	echo "GNU indent deteected, forcing -orig"
+fi
+
 ERRORS=0
 for i in $DIRS; do
 	echo "--- $i"
 	for j in `list $i` `list_header $i`; do
 		echo "----- $j"
-		indent -npro -nlpl -lp -bbb -bad $j
+		indent -i8 $ORIG -npro -nlpl -lp -bbb -bad $j
 		if [ ! "$?" = "0" ]; then
 			ERRORS=$(($ERRORS + 1))
 		fi
 	done
 done
-rm -f *.BAK
+rm -f `find . -name "*.BAK"`
+rm -f `find . -name "*~"`
 echo
 echo "$ERRORS error(s)"
 if [ "$ERRORS" -gt 0 ]; then
