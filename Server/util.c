@@ -70,3 +70,5 @@ nd_gethostname(void)
 #endif
 	return host;
 }
+
+
