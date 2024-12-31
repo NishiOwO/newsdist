@@ -27,7 +27,10 @@ list		: component
 		| list component
 		;
 
-component	: WELCOME SPACES STRING NEWLINE
+component	: WELCOME SPACES STRING NEWLINE {
+	if(welcome_text != NULL) free(welcome_text);
+	welcome_text = nd_strdup($<string>3);
+}
 		| PORT SPACES NUMBER NEWLINE {
 	plain_port = $<number>3;
 }

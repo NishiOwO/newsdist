@@ -60,6 +60,7 @@ int             nd_write(nd_pass_t * pass, void *buffer, int size);
 /*
  * util.c 
  */
+char           *nd_strcat(const char *a, const char *b);
 char           *nd_strdup(const char *str);
 char           *nd_get_system(void);
 char           *nd_gethostname(void);

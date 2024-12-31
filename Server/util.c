@@ -12,6 +12,16 @@
 #include "newsdist.h"
 
 char           *
+nd_strcat(const char *a, const char *b)
+{
+	char           *str = malloc(strlen(a) + strlen(b) + 1);
+
+	strcpy(str, a);
+	strcpy(str + strlen(a), b);
+	return str;
+}
+
+char           *
 nd_strdup(const char *str)
 {
 #ifdef HAS_STRDUP
@@ -77,5 +87,52 @@ nd_gethostname(void)
 char           *
 nd_format(const char *str)
 {
-	return NULL;
+	char           *r = malloc(1);
+	int             i;
+
+	r[0] = 0;
+	for (i = 0; str[i] != 0; i++) {
+		if (str[i] == '%') {
+			i++;
+			if (str[i] == 'n') {
+				char           *h = nd_gethostname();
+				char           *tmp = r;
+
+				r = nd_strcat(r, h);
+				free(tmp);
+				free(h);
+			} else if (str[i] == 'v') {
+				char           *tmp = r;
+
+				r = nd_strcat(r, NEWSDIST_VERSION);
+				free(tmp);
+			} else if (str[i] == 'p') {
+				char           *t = nd_get_system();
+				char           *tmp = r;
+
+				r = nd_strcat(r, t);
+				free(tmp);
+				free(t);
+			} else {
+				char            cbuf[2];
+				char           *tmp;
+
+				cbuf[0] = str[i];
+				cbuf[1] = 0;
+				tmp = r;
+				r = nd_strcat(r, cbuf);
+				free(tmp);
+			}
+		} else {
+			char            cbuf[2];
+			char           *tmp;
+
+			cbuf[0] = str[i];
+			cbuf[1] = 0;
+			tmp = r;
+			r = nd_strcat(r, cbuf);
+			free(tmp);
+		}
+	}
+	return r;
 }
