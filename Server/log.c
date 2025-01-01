@@ -13,11 +13,11 @@
 
 
 #ifdef HAS_FORK
-int             enable_stderr_log = 0;
-int             enable_syslog = 1;
+int		enable_stderr_log = 0;
+int		enable_syslog = 1;
 #else
-int             enable_stderr_log = 1;
-int             enable_syslog = 0;
+int		enable_stderr_log = 1;
+int		enable_syslog = 0;
 #endif
 
 void
@@ -34,7 +34,7 @@ nd_init_log(void)
 void
 nd_log_string(char *out)
 {
-	time_t          t = time(NULL);
+	time_t		t = time(NULL);
 	struct tm      *tm = localtime(&t);
 
 	const char     *mons[] = {
@@ -59,7 +59,7 @@ nd_log_string(char *out)
 void
 nd_log_info(const char *info)
 {
-	char            timestr[512];
+	char		timestr[512];
 
 #ifdef USE_SYSTEM_SYSLOG
 	if (enable_syslog)
@@ -74,7 +74,7 @@ nd_log_info(const char *info)
 void
 nd_log_notice(const char *info)
 {
-	char            timestr[512];
+	char		timestr[512];
 
 #ifdef USE_SYSTEM_SYSLOG
 	if (enable_syslog)

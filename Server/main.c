@@ -18,21 +18,27 @@
 #include <nwconio.h>
 #endif
 
-char           *confpath = PREFIX "/etc/newsdist.conf";
+char	       *confpath = PREFIX "/etc/newsdist.conf";
 
-int             yyconfparse(void);
+int		yyconfparse(void);
 extern FILE    *yyconfin;
-extern int      enable_stderr_log;
-extern int      enable_syslog;
+extern int	enable_stderr_log;
+extern int	enable_syslog;
 
 #ifdef HAS_NW_BEGINTHREAD
-void            thread_stuff(void *pargs);
+#define EXIT(x) return
 #else
-int             thread_stuff(void *pargs);
+#define EXIT(x) return x
+#endif
+
+#ifdef HAS_NW_BEGINTHREAD
+void		thread_stuff(void *pargs);
+#else
+int		thread_stuff(void *pargs);
 #endif
 struct arg_struct {
-	int             argc;
-	char          **argv;
+	int		argc;
+	char	      **argv;
 };
 
 int
@@ -63,15 +69,15 @@ int
 thread_stuff(void *pargs)
 {
 #endif
-	int             argc = ((struct arg_struct *) pargs)->argc;
-	char          **argv = ((struct arg_struct *) pargs)->argv;
-	int             i;
-	char           *buffer;
+	int		argc = ((struct arg_struct *)pargs)->argc;
+	char	      **argv = ((struct arg_struct *)pargs)->argv;
+	int		i;
+	char	       *buffer;
 
 #ifdef HAS_FORK
-	int             daemonize = 1;
+	int		daemonize = 1;
 #else
-	int             daemonize = 0;
+	int		daemonize = 0;
 #endif
 
 	CONFIG_ASSIGN_DEFAULT;
@@ -85,9 +91,9 @@ thread_stuff(void *pargs)
 			if (strcmp(argv[i], "--version") == 0
 			    || strcmp(argv[i], "-V") == 0) {
 				const char     *defines[] = DEFINES;
-				int             j;
-				int             k;
-				int             maxlen = 0;
+				int		j;
+				int		k;
+				int		maxlen = 0;
 
 				printf("Configuration:\n");
 				for (j = 0;
@@ -97,7 +103,7 @@ thread_stuff(void *pargs)
 					if ((strlen(defines[j]) + 1) >
 					    maxlen)
 						maxlen =
-						    strlen(defines[j]) + 1;
+							strlen(defines[j]) + 1;
 				}
 				for (j = 0;
 				     j <
@@ -116,23 +122,15 @@ thread_stuff(void *pargs)
 				}
 				if (j % 3 != 0)
 					printf("\n");
-#ifdef HAS_NW_BEGINTHREAD
-				return;
-#else
-				return 0;
-#endif
+				EXIT(0);
 			} else if (strcmp(argv[i], "--config") == 0
 				   || strcmp(argv[i], "-C") == 0) {
-				confpath = argv[(long) i + 1];
+				confpath = argv[(long)i + 1];
 				if (confpath == NULL) {
 					fprintf(stderr,
 						"%s requires an argument\n",
 						argv[i]);
-#ifdef HAS_NW_BEGINTHREAD
-					return;
-#else
-					return 1;
-#endif
+					EXIT(1);
 				}
 			} else if (strcmp(argv[i], "--stderr-log") == 0
 				   || strcmp(argv[i], "-S") == 0) {
@@ -155,11 +153,7 @@ thread_stuff(void *pargs)
 			} else {
 				fprintf(stderr, "Invalid flag: %s\n",
 					argv[i]);
-#ifdef HAS_NW_BEGINTHREAD
-				return;
-#else
-				return 1;
-#endif
+				EXIT(1);
 			}
 		}
 	}
@@ -167,19 +161,11 @@ thread_stuff(void *pargs)
 	if (yyconfin == NULL) {
 		fprintf(stderr, "Could not open the config: %s\n",
 			confpath);
-#ifdef HAS_NW_BEGINTHREAD
-		return;
-#else
-		return 1;
-#endif
+		EXIT(1);
 	}
 	if (yyconfparse() != 0) {
 		fclose(yyconfin);
-#ifdef HAS_NW_BEGINTHREAD
-		return;
-#else
-		return 1;
-#endif
+		EXIT(1);
 	}
 	fclose(yyconfin);
 #ifdef HAS_SIGCHLD
@@ -191,28 +177,15 @@ thread_stuff(void *pargs)
 	nd_init_log();
 	if (nd_init_ssl() < 0) {
 		nd_log_notice("SSL initialization fail");
-#ifdef HAS_NW_BEGINTHREAD
-		return;
-#else
-		return 1;
-#endif
+		EXIT(1);
 	}
-#ifdef HAS_NW_BEGINTHREAD
 	if (nd_init_server() != 0)
-		return;
-#else
-	if (nd_init_server() != 0)
-		return 1;
-#endif
+		EXIT(1);
 #ifdef HAS_FORK
 	if (daemonize) {
 		if (fork() != 0) {
 			printf("Daemon started\n");
-#ifdef HAS_NW_BEGINTHREAD
-			return;
-#else
-			return 0;
-#endif
+			EXIT(0);
 		}
 	} else {
 		nd_log_info("Not daemonizing");

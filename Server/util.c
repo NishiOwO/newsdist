@@ -11,35 +11,35 @@
 
 #include "newsdist.h"
 
-char           *
+char *
 nd_strcat(const char *a, const char *b)
 {
-	char           *str = malloc(strlen(a) + strlen(b) + 1);
+	char	       *str = malloc(strlen(a) + strlen(b) + 1);
 
 	strcpy(str, a);
 	strcpy(str + strlen(a), b);
 	return str;
 }
 
-char           *
+char *
 nd_strdup(const char *str)
 {
 #ifdef HAS_STRDUP
 	return strdup(str);
 #else
-	char           *r = malloc(strlen(str) + 1);
+	char	       *r = malloc(strlen(str) + 1);
 
 	strcpy(r, str);
 	return r;
 #endif
 }
 
-char           *
+char *
 nd_get_system(void)
 {
 #if defined(HAS_UNAME)
-	struct utsname  u;
-	char           *name = malloc(512);
+	struct utsname	u;
+	char	       *name = malloc(512);
 
 	name[0] = 0;
 	uname(&u);
@@ -60,21 +60,20 @@ nd_get_system(void)
 
 #ifndef HAS_HTONS
 uint16_t
-htons(uint16_t n)
-{
+htons(uint16_t n) {
 	return ((n >> 8) & 0xff) | ((n << 8) & 0xff00);
 }
 #endif
 
-char           *
+char *
 nd_gethostname(void)
 {
-	char           *host = malloc(513);
+	char	       *host = malloc(513);
 
 #if defined(HAS_GETHOSTNAME)
 	gethostname(host, 512);
 #elif defined(HAS_UNAME)
-	struct utsname  u;
+	struct utsname	u;
 
 	uname(&u);
 	strcpy(host, u.nodename);
@@ -84,38 +83,38 @@ nd_gethostname(void)
 	return host;
 }
 
-char           *
+char *
 nd_format(const char *str)
 {
-	char           *r = malloc(1);
-	int             i;
+	char	       *r = malloc(1);
+	int		i;
 
 	r[0] = 0;
 	for (i = 0; str[i] != 0; i++) {
 		if (str[i] == '%') {
 			i++;
 			if (str[i] == 'n') {
-				char           *h = nd_gethostname();
-				char           *tmp = r;
+				char	       *h = nd_gethostname();
+				char	       *tmp = r;
 
 				r = nd_strcat(r, h);
 				free(tmp);
 				free(h);
 			} else if (str[i] == 'v') {
-				char           *tmp = r;
+				char	       *tmp = r;
 
 				r = nd_strcat(r, NEWSDIST_VERSION);
 				free(tmp);
 			} else if (str[i] == 'p') {
-				char           *t = nd_get_system();
-				char           *tmp = r;
+				char	       *t = nd_get_system();
+				char	       *tmp = r;
 
 				r = nd_strcat(r, t);
 				free(tmp);
 				free(t);
 			} else {
-				char            cbuf[2];
-				char           *tmp;
+				char		cbuf[2];
+				char	       *tmp;
 
 				cbuf[0] = str[i];
 				cbuf[1] = 0;
@@ -124,8 +123,8 @@ nd_format(const char *str)
 				free(tmp);
 			}
 		} else {
-			char            cbuf[2];
-			char           *tmp;
+			char		cbuf[2];
+			char	       *tmp;
 
 			cbuf[0] = str[i];
 			cbuf[1] = 0;

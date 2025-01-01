@@ -16,7 +16,7 @@
 #include <openssl/ssl.h>
 const char     *nd_sslver = OPENSSL_VERSION_TEXT;
 
-SSL_CTX        *openssl_ctx;
+SSL_CTX	       *openssl_ctx;
 #endif
 
 int
@@ -27,7 +27,7 @@ nd_init_ssl(void)
 #ifdef HAS_SSL
 	if (ssl_key == NULL || ssl_cert == NULL) {
 		nd_log_info
-		    ("SSLKey and/or SSLCertificate not specified, SSL not used");
+			("SSLKey and/or SSLCertificate not specified, SSL not used");
 		return 0;
 	}
 #endif
@@ -58,7 +58,7 @@ nd_init_ssl(void)
 #endif
 }
 
-const void     *
+const void *
 nd_create_method(void)
 {
 #ifdef HAS_OPENSSL
@@ -83,7 +83,7 @@ nd_create_method(void)
 }
 
 int
-nd_read(nd_pass_t * pass, void *buffer, int size)
+nd_read(nd_pass_t *pass, void *buffer, int size)
 {
 	if (pass->do_ssl) {
 #ifdef HAS_OPENSSL
@@ -97,7 +97,7 @@ nd_read(nd_pass_t * pass, void *buffer, int size)
 }
 
 int
-nd_write(nd_pass_t * pass, void *buffer, int size)
+nd_write(nd_pass_t *pass, void *buffer, int size)
 {
 	if (pass->do_ssl) {
 #ifdef HAS_OPENSSL
@@ -111,7 +111,7 @@ nd_write(nd_pass_t * pass, void *buffer, int size)
 }
 
 void
-nd_create_ssl(nd_pass_t * pass)
+nd_create_ssl(nd_pass_t *pass)
 {
 
 	pass->ssl = malloc(sizeof(*pass->ssl));
@@ -128,7 +128,7 @@ nd_create_ssl(nd_pass_t * pass)
 }
 
 void
-nd_close_socket(nd_pass_t * pass)
+nd_close_socket(nd_pass_t *pass)
 {
 	if (pass->do_ssl) {
 #ifdef HAS_OPENSSL
@@ -143,7 +143,7 @@ nd_close_socket(nd_pass_t * pass)
 }
 
 int
-nd_accept_ssl(nd_pass_t * pass)
+nd_accept_ssl(nd_pass_t *pass)
 {
 	if (pass->do_ssl) {
 		nd_create_ssl(pass);
@@ -154,7 +154,7 @@ nd_accept_ssl(nd_pass_t * pass)
 	return 0;
 }
 
-const char     *
+const char *
 nd_get_ssl_version(void)
 {
 #ifdef HAS_SSL

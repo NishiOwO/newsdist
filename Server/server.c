@@ -24,19 +24,19 @@
 #define SECURE6	3
 
 /*
- * I hope your socket() implementation does not return -0xdead 
+ * I hope your socket() implementation does not return -0xdead
  */
 #define NO_SOCKET -0xdead
 
-int             server_sockets[4];
+int		server_sockets[4];
 
 int
 nd_init_server(void)
 {
-	int             i;
+	int		i;
 
 #ifdef HAS_WINSOCK
-	WSADATA         wsa;
+	WSADATA		wsa;
 
 	WSAStartup(MAKEWORD(2, 0), &wsa);
 #endif
@@ -57,25 +57,25 @@ nd_init_server(void)
 #endif
 #ifdef HAS_IPV6
 	server_sockets[PLAIN6] =
-	    socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
+		socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
 #endif
 
 #ifdef HAS_SSL
 #ifdef HAS_IPV4
 	if (ssl_key != NULL && ssl_cert != NULL)
 		server_sockets[SECURE] =
-		    socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+			socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 #endif
 #ifdef HAS_IPV6
 	if (ssl_key != NULL && ssl_cert != NULL)
 		server_sockets[SECURE6] =
-		    socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
+			socket(AF_INET6, SOCK_STREAM, IPPROTO_TCP);
 #endif
 #endif
 
 	for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]);
 	     i++) {
-		int             yes = 1;
+		int		yes = 1;
 
 #ifdef HAS_IPV4
 		struct sockaddr_in inet4;
@@ -88,7 +88,7 @@ nd_init_server(void)
 #ifdef HAS_SO_REUSEADDR
 		if (setsockopt
 		    (server_sockets[i], SOL_SOCKET, SO_REUSEADDR,
-		     (void *) &yes, sizeof(yes)) < 0) {
+		     (void *)&yes, sizeof(yes)) < 0) {
 			CLOSE_SOCKET(server_sockets[i]);
 			nd_log_notice("setsockopt fail (SO_REUSEADDR)");
 			return 1;
@@ -97,7 +97,7 @@ nd_init_server(void)
 #ifdef HAS_TCP_NODELAY
 		if (setsockopt
 		    (server_sockets[i], IPPROTO_TCP, TCP_NODELAY,
-		     (void *) &yes, sizeof(yes)) < 0) {
+		     (void *)&yes, sizeof(yes)) < 0) {
 			CLOSE_SOCKET(server_sockets[i]);
 			nd_log_notice("setsockopt fail (TCP_NODELAY)");
 			return 1;
@@ -105,14 +105,14 @@ nd_init_server(void)
 #endif
 		if (i & 1) {
 			/*
-			 * IPv6 
+			 * IPv6
 			 */
 #ifdef HAS_IPV6
 			memset(&inet6, 0, sizeof(inet6));
 			inet6.sin6_family = AF_INET6;
 			inet6.sin6_addr = in6addr_any;
 			inet6.sin6_port =
-			    htons((i & 2) ? ssl_port : plain_port);
+				htons((i & 2) ? ssl_port : plain_port);
 #ifdef HAS_IPV6_V6ONLY
 
 			/*
@@ -120,11 +120,11 @@ nd_init_server(void)
 			 * this disabled by default
 			 */
 			setsockopt(server_sockets[i], IPPROTO_IPV6,
-				   IPV6_V6ONLY, (void *) &yes,
+				   IPV6_V6ONLY, (void *)&yes,
 				   sizeof(yes));
 #endif
 			if (bind
-			    (server_sockets[i], (struct sockaddr *) &inet6,
+			    (server_sockets[i], (struct sockaddr *)&inet6,
 			     sizeof(inet6)) < 0 && errno != ENETUNREACH) {
 				/*
 				 * ENETUNREACH if there is no IPv6 assigned,
@@ -137,16 +137,16 @@ nd_init_server(void)
 #endif
 		} else {
 			/*
-			 * IPv4 
+			 * IPv4
 			 */
 #ifdef HAS_IPV4
 			memset(&inet4, 0, sizeof(inet4));
 			inet4.sin_family = AF_INET;
 			inet4.sin_addr.s_addr = INADDR_ANY;
 			inet4.sin_port =
-			    htons((i & 2) ? ssl_port : plain_port);
+				htons((i & 2) ? ssl_port : plain_port);
 			if (bind
-			    (server_sockets[i], (struct sockaddr *) &inet4,
+			    (server_sockets[i], (struct sockaddr *)&inet4,
 			     sizeof(inet4)) < 0 && errno != ENETUNREACH) {
 				CLOSE_SOCKET(server_sockets[i]);
 				nd_log_notice("bind fail");
@@ -184,13 +184,14 @@ nd_pass(void *tptr)
 int
 nd_loop_server(void)
 {
-	int             i;
+	int		i;
 
 #if defined(HAS_POLL)
+
 	/*
-	 * This is preferred way 
+	 * This is preferred way
 	 */
-	int             count = 0;
+	int		count = 0;
 	struct pollfd  *fds;
 
 	for (i = 0; i < sizeof(server_sockets) / sizeof(server_sockets[0]);
@@ -209,11 +210,11 @@ nd_loop_server(void)
 		count++;
 	}
 #elif defined(HAS_SELECT)
-	fd_set          fdset;
-	struct timeval  tv;
+	fd_set		fdset;
+	struct timeval	tv;
 #endif
 	while (1) {
-		int             n;
+		int		n;
 
 #if defined(HAS_POLL)
 		n = poll(fds, count, 1000);
@@ -238,15 +239,15 @@ nd_loop_server(void)
 			break;
 		} else if (n > 0) {
 			/*
-			 * Connection 
+			 * Connection
 			 */
-			int             incr = 0;
+			int		incr = 0;
 
 			for (i = 0;
 			     i <
 			     sizeof(server_sockets) /
 			     sizeof(server_sockets[0]); i++) {
-				int             go = 0;
+				int		go = 0;
 
 				if (server_sockets[i] == NO_SOCKET)
 					continue;
@@ -258,54 +259,56 @@ nd_loop_server(void)
 					go = 1;
 #endif
 				if (go) {
-					int             sock;
+					int		sock;
 
 #ifdef HAS_IPV4
 					struct sockaddr_in inet4;
-					socklen_t       cl4 =
-					    sizeof(inet4);
+					socklen_t	cl4 =
+					sizeof(inet4);
 #endif
 #ifdef HAS_IPV6
 					struct sockaddr_in6 inet6;
-					socklen_t       cl6 =
-					    sizeof(inet6);
+					socklen_t	cl6 =
+					sizeof(inet6);
 #endif
 #ifdef HAS_IPV4
+
 					/*
-					 * IPv4 connection 
+					 * IPv4 connection
 					 */
 					if (!(i & ND_IPV6_MASK)) {
 						sock =
-						    accept(server_sockets
-							   [i],
-							   (struct sockaddr
-							    *) &inet4,
-							   &cl4);
+							accept(server_sockets
+							       [i],
+							    (struct sockaddr
+							     *)&inet4,
+							       &cl4);
 					}
 #endif
 #ifdef HAS_IPV6
+
 					/*
-					 * IPv6 connection 
+					 * IPv6 connection
 					 */
 					if (i & ND_IPV6_MASK) {
 						sock =
-						    accept(server_sockets
-							   [i],
-							   (struct sockaddr
-							    *) &inet6,
-							   &cl6);
+							accept(server_sockets
+							       [i],
+							    (struct sockaddr
+							     *)&inet6,
+							       &cl6);
 					}
 #endif
 					nd_log_info("New connection");
 					if (sock >= 0) {
 						/*
-						 * Process socket here 
+						 * Process socket here
 						 */
 						nd_pass_t      *ptr =
-						    malloc(sizeof(*ptr));
+						malloc(sizeof(*ptr));
 
 						ptr->do_ssl =
-						    i & ND_SSL_MASK;
+							i & ND_SSL_MASK;
 						ptr->sock = sock;
 						ptr->serverindex = i;
 						ptr->ssl = NULL;
@@ -322,8 +325,8 @@ nd_loop_server(void)
 								if (server_sockets[i] == NO_SOCKET)
 									continue;
 								CLOSE_SOCKET
-								    (server_sockets
-								     [i]);
+									(server_sockets
+								       [i]);
 							}
 
 							nd_pass(ptr);
@@ -352,8 +355,9 @@ nd_loop_server(void)
 			}
 		}
 	}
+
 	/*
-	 * NOTREACHED 
+	 * NOTREACHED
 	 */
 	return 0;
 }
