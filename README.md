@@ -1,6 +1,8 @@
 # NewsDist
 
-![Logo](Binary/logo.gif)
+<p align="center">
+	![Logo](Binary/logo.gif)
+</p>
 
 This distribution contains the source code of NewsDist: the simple NNTP server.
 
