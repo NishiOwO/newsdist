@@ -12,3 +12,4 @@ cp -rf * /tmp/newsdist-$VERSION/
 rm -f *.tar.gz
 cd /tmp
 tar czvf $OLD/newsdist-$VERSION.tar.gz newsdist-$VERSION
+rm -rf newsdist-$VERSION
