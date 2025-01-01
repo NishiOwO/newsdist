@@ -171,7 +171,7 @@ nd_pass(void *tptr)
 	if (nd_accept_ssl(ptr) >= 0) {
 		nd_close_socket(ptr);
 		free(ptr);
-	}else{
+	} else {
 	}
 #ifdef HAS_NW_BEGINTHREAD
 	ExitThread(EXIT_THREAD, 0);
