@@ -54,6 +54,7 @@ int yyconferror(const char* str){
 }
 
 ([ \t]*#[^\n]+)		;
+([ \t]*#)		;
 ([ \t]*\n[ \t]*)	{
         return NEWLINE;
 }
