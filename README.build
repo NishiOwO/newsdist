@@ -1,7 +1,7 @@
 Building NewsDist
 
 NewsDist currently supports these platforms:
- - NetBSD             (Checked working on amd64 10.0)
+ - NetBSD             (Checked working on amd64 10.1)
  - Debian GNU/Linux   (Checked working on x86_64 12)
  - NetWare            (Checked working on 6.5 SP8)
  - SCO UnixWare 7     (Checked working on 7 Definitive)

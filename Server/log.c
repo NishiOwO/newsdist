@@ -1,4 +1,3 @@
-
 /**
  * $Id$
  */
@@ -9,8 +8,6 @@
 #include <time.h>
 
 #include "newsdist.h"
-
-
 
 #ifdef HAS_FORK
 int		enable_stderr_log = 0;

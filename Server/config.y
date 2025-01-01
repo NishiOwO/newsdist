@@ -3,6 +3,7 @@
  */
 
 %{
+#include <stdio.h>
 #include <stdlib.h>
 
 #define CONFIG_IMPLEMENTATION
@@ -28,8 +29,15 @@ list		: component
 		;
 
 component	: WELCOME SPACES STRING NEWLINE {
+	char* s;
+	char* tmp;
 	if(welcome_text != NULL) free(welcome_text);
 	welcome_text = nd_strdup($<string>3);
+	tmp = nd_format(welcome_text);
+	s = nd_strcat("Setting welcome text: ", tmp);
+	free(tmp);
+	nd_log_info(s);
+	free(s);
 }
 		| PORT SPACES NUMBER NEWLINE {
 	plain_port = $<number>3;

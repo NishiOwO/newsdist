@@ -1,4 +1,3 @@
-
 /**
  * $Id$
  */
@@ -163,6 +162,7 @@ thread_stuff(void *pargs)
 			confpath);
 		EXIT(1);
 	}
+	nd_init_log();
 	if (yyconfparse() != 0) {
 		fclose(yyconfin);
 		EXIT(1);
@@ -174,7 +174,6 @@ thread_stuff(void *pargs)
 #ifdef HAS_SIGPIPE
 	signal(SIGPIPE, SIG_IGN);
 #endif
-	nd_init_log();
 	if (nd_init_ssl() < 0) {
 		nd_log_notice("SSL initialization fail");
 		EXIT(1);
