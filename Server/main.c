@@ -191,7 +191,11 @@ thread_stuff(void *pargs)
 	nd_init_log();
 	if (nd_init_ssl() < 0) {
 		nd_log_notice("SSL initialization fail");
+#ifdef HAS_NW_BEGINTHREAD
+		return;
+#else
 		return 1;
+#endif
 	}
 #ifdef HAS_NW_BEGINTHREAD
 	if (nd_init_server() != 0)
