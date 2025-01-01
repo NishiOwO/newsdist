@@ -1,6 +1,7 @@
 #!/bin/sh
 # $Id$
 
+# TODO: 1.0
 VERSION="0.0"
 
 if [ "x$CONFIG" = "xGET" ]; then
