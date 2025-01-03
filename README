@@ -1,3 +1,31 @@
-This distribution contains the source code of NewsDist: the simple NNTP server.
+			      NewsDist NNTP Daemon
+			 The cross-platform NNTP daemon
 
-Website: http://newsdist.nishi.boats
+			   Nishi <nishi@nishi.boats>
+
+		      Website: http://newsdist.nishi.boats
+
+
+
+TOC:
+  1) What is NewsDist
+  2) Platform support
+  3) How to build
+
+
+
+1) What is NewsDist
+======================
+
+NewsDist is a simple cross-platform NNTP daemon, made for myself so I don't have
+to configure INN.
+NewsDist is aimed to support RFC 3977 "Network News Transfer Protocol (NNTP)".
+
+
+
+2) Platform support
+======================
+
+================================================================================
+$Id$
+vim: nonu
