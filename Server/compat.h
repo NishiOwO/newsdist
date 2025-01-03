@@ -15,6 +15,9 @@
 #ifdef HAS_SYS_TYPES_H
 #include <sys/types.h>
 #endif
+#ifdef HAS_SYS_BYTEORDER_H
+#include <sys/byteorder.h>
+#endif
 
 /*
  * Include socket headers or not

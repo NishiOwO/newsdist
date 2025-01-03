@@ -461,6 +461,13 @@ if test_c "#include <types.h>"; then
 else
 	undef "HAS_TYPES_H"
 fi
+log_raw "Checking if sys/byteorder.h exists: "
+if test_c "#include <sys/byteorder.h>"; then
+	TYPES="$TYPES\n#include <sys/byteorder.h>"
+	define "HAS_SYS_BYTEORDER_H"
+else
+	undef "HAS_SYS_BYTEORDER_H"
+fi
 
 log_raw "Checking if Winsock 2 exists: "
 if test_c "#include <winsock2.h>\nint main(int argc, char** argv){return 0;}"; then
@@ -558,11 +565,11 @@ else
 fi
 
 log_raw "Checking if htons exists as function: "
-if test_c "$TYPES\n#include <$INET_H>\n#include <$SOCKET_H>\nint main(int argc, char** argv){void* s = htons;return 0;}"; then
+if test_c "$TYPES\n#include <$INET_H>\nint main(int argc, char** argv){void* s = htons;return 0;}"; then
 	define "HAS_HTONS"
 else
 	log_raw "Checking if htons exists as macro: "
-	if test_c "$TYPES\n#include <$INET_H>\n#include <$SOCKET_H>\n#ifndef htons\n#error no\n#endif"; then
+	if test_c "$TYPES\n#include <$INET_H>\n#ifndef htons\n#error no\n#endif"; then
 		define "HAS_HTONS"
 	else
 		undef "HAS_HTONS"
