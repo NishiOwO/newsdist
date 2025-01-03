@@ -60,7 +60,7 @@ nd_nntpd_handle(nd_pass_t *p)
 {
 	char	       *fmt = nd_format(welcome_text);
 
-	if (nd_nntpd_status(p, 201, fmt)) {
+	if (nd_nntpd_status(p, 200, fmt)) {
 		printf("!\n");
 		free(fmt);
 		return;
