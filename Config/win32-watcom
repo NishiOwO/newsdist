@@ -7,4 +7,4 @@ CFLAGS="-b win32 -I $WATCOM/h/nt"
 LDFLAGS="-b win32 -L $WATCOM/lib386/nt"
 EXEC=.exe
 
-PREFIX="C:/Tewi"
+PREFIX="C:/NewsDist"

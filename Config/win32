@@ -4,4 +4,4 @@ AR=i686-w64-mingw32-ar
 RANLIB=i686-w64-mingw32-ranlib
 EXEC=.exe
 
-PREFIX="C:/Tewi"
+PREFIX="C:/NewsDist"
