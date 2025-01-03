@@ -31,7 +31,7 @@ nd_nntpd_read_line(nd_pass_t *p)
 	buffer[0] = 0;
 
 	while (1) {
-		if (nd_timeout(p, 1000) < 0) {
+		if (nd_timeout(p, 10000) < 0) {
 			free(buffer);
 			return NULL;
 		} else {
@@ -64,7 +64,6 @@ nd_nntpd_handle(nd_pass_t *p)
 	char	       *fmt = nd_format(welcome_text);
 
 	if (nd_nntpd_status(p, 200, fmt)) {
-		printf("!\n");
 		free(fmt);
 		return;
 	}
@@ -81,10 +80,10 @@ nd_nntpd_handle(nd_pass_t *p)
 			nd_write_string(p, "AUTHINFO USER\r\n");
 			nd_write_string(p, ".\r\n");
 		} else if (nd_strcaseequ(l, "QUIT")) {
+			nd_nntpd_status(p, 205, "Sayonara");
 			free(l);
 			break;
 		} else {
-			printf("[%s]\n", l);
 			nd_write_string(p, "500 Pardon?\r\n");
 		}
 		free(l);
