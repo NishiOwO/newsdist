@@ -78,6 +78,7 @@ nd_nntpd_handle(nd_pass_t *p)
 			nd_write_string(p, "101 Here:\r\n");
 			nd_write_string(p, "VERSION 2\r\n");
 			nd_write_string(p, "IMPLEMENTATION NewsDist " NEWSDIST_VERSION "\r\n");
+			nd_write_string(p, "AUTHINFO USER\r\n");
 			nd_write_string(p, ".\r\n");
 		} else if (nd_strcaseequ(l, "QUIT")) {
 			free(l);
