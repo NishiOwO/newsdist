@@ -11,6 +11,9 @@ TOC:
   1) What is NewsDist
   2) Platform support
   3) How to build
+  3.1) Building for Unix/Unix-likes
+  3.2) Building for NetWare
+  3.3) Building for Windows NT
 
 
 
@@ -26,6 +29,85 @@ NewsDist is aimed to support RFC 3977 "Network News Transfer Protocol (NNTP)".
 2) Platform support
 ======================
 
+NewsDist currently supports these platforms mainly:
+  1) NetBSD
+     Checked working on amd64 10.1.
+  2) NetWare
+     Checked working on 6.5 SP8.
+  3) SCO UnixWare 7
+     Checked working on 7 Definitive.
+  4) Linux
+     Checked working on Debian GNU/Linux 12 x86_64.
+
+These platforms are supported, but not mainly:
+  1) Windows NT
+     x86    is checked working on NT4.0 SP6 (Terminal Server).
+     x86_64 is checked working on Server 2012R2.
+
+
+
+3) How to build
+==================
+
+Ways to build differ on platforms.
+
+3.1) Building for Unix/Unix-likes
+====================================
+
+Requirements:
+  1) C89 compiler, these are checked working:
+     1) SCO OUDK
+     2) GCC 2
+  2) BSD Make/GNU Make
+  3) Bourne shell
+  4) Bison/Berkeley Yacc
+     Note on SCO UnixWare 7: You have to build recent Berkeley Yacc to build
+                             NewsDist, packaged Bison seems to be broken.
+  5) Flex
+     Note on SCO UnixWare 7: You have to build recent Flex to build NewsDist,
+                             packaged Flex seems to be broken.
+
+Simply run `./configure`, then `make`.
+
+3.2) Building for NetWare
+============================
+
+Requirements:
+  1) C89 compiler, these are checked working:
+     1) Open Watcom 2.0
+  2) BSD Make/GNU Make
+  3) Bourne shell
+  4) Bison/Berkeley Yacc
+  5) Flex
+  6) Novell NetWare SDK, or Novell CLib development kit
+
+Note: CLib development kit must be located at /usr/novell/clib, or you must copy
+      Config/netware and edit the `NOVELLNDK=` line, then run `./configure` with
+      it.
+
+Run `./configure Config/netware`, then `make`.
+
+3.3) Building for Windows NT
+===============================
+
+Requirements:
+  1) C89 compiler, these are checked working:
+     1) Open Watcom 2.0 (for x86)
+     2) Mingw-w64       (for both x86 and x86_64)
+  2) BSD Make/GNU Make
+  3) Bourne shell
+  4) Bison/Berkeley Yacc
+  5) Flex
+
+Config file depends on the architecture, and the compiler. Use:
+  1) `Config/win32` if you want to compile using Mingw-w64, and output x86
+     executable.
+  2) `Config/win32-watcom` if you want to compile using Open Watcom 2.0, and
+     output x86 executable.
+  3) `Config/win64` if you want to compile using Mingw-w64, and output x86_64
+     executable.
+
+Run `./configure [config path here]`, then `make`.
+
 ================================================================================
 $Id$
-vim: nonu
