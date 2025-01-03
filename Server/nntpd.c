@@ -19,7 +19,7 @@ nd_nntpd_status(nd_pass_t *p, int status, const char *message)
 	sprintf(r, "%d %s\r\n", status, message);
 	st = nd_write(p, r, strlen(r));
 	free(r);
-	return st <= 0 ? -1 : 0;
+	return st;
 }
 
 char *
@@ -37,7 +37,10 @@ nd_nntpd_read_line(nd_pass_t *p)
 		} else {
 			char		c;
 
-			nd_read(p, &c, 1);
+			if (nd_read(p, &c, 1) < 0) {
+				free(buffer);
+				return NULL;
+			}
 			if (c == '\n') {
 				break;
 			} else if (c != '\r') {
@@ -72,10 +75,16 @@ nd_nntpd_handle(nd_pass_t *p)
 		if (l == NULL)
 			break;
 		if (nd_strcaseequ(l, "CAPABILITIES")) {
-			nd_write(p, "101 Here:\r\n", 3 + 1 + 4 + 1 + 2);
-			nd_write(p, ".\r\n", 3);
+			nd_write_string(p, "101 Here:\r\n");
+			nd_write_string(p, "VERSION 2\r\n");
+			nd_write_string(p, "IMPLEMENTATION NewsDist " NEWSDIST_VERSION "\r\n");
+			nd_write_string(p, ".\r\n");
+		} else if (nd_strcaseequ(l, "QUIT")) {
+			free(l);
+			break;
 		} else {
-			nd_write(p, "500 Pardon?\r\n", 3 + 1 + 6 + 1 + 2);
+			printf("[%s]\n", l);
+			nd_write_string(p, "500 Pardon?\r\n");
 		}
 		free(l);
 	}

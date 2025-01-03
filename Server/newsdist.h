@@ -52,6 +52,7 @@ int		nd_init_ssl(void);
 int		nd_read(nd_pass_t * pass, void *buffer, int size);
 int		nd_write(nd_pass_t * pass, void *buffer, int size);
 int		nd_timeout(nd_pass_t * pass, int time);
+int		nd_write_string(nd_pass_t * pass, const char *string);
 
 /*
  * util.c

@@ -87,12 +87,12 @@ nd_read(nd_pass_t *pass, void *buffer, int size)
 {
 	if (pass->do_ssl) {
 #ifdef HAS_OPENSSL
-		return SSL_read(pass->ssl->ssl, buffer, size);
+		return SSL_read(pass->ssl->ssl, buffer, size) <= 0 ? -1 : 0;
 #else
 		return -1;
 #endif
 	} else {
-		return recv(pass->sock, buffer, size, 0);
+		return recv(pass->sock, buffer, size, 0) <= 0 ? -1 : 0;
 	}
 }
 
@@ -101,13 +101,19 @@ nd_write(nd_pass_t *pass, void *buffer, int size)
 {
 	if (pass->do_ssl) {
 #ifdef HAS_OPENSSL
-		return SSL_write(pass->ssl->ssl, buffer, size);
+		return SSL_write(pass->ssl->ssl, buffer, size) <= 0 ? -1 : 0;
 #else
 		return -1;
 #endif
 	} else {
-		return send(pass->sock, buffer, size, 0);
+		return send(pass->sock, buffer, size, 0) <= 0 ? -1 : 0;
 	}
+}
+
+int
+nd_write_string(nd_pass_t *pass, const char *string)
+{
+	return nd_write(pass, (void *)string, strlen(string));
 }
 
 int
