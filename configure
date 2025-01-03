@@ -461,12 +461,12 @@ if test_c "#include <types.h>"; then
 else
 	undef "HAS_TYPES_H"
 fi
-log_raw "Checking if sys/byteorder.h exists: "
-if test_c "#include <sys/byteorder.h>"; then
-	TYPES="$TYPES\n#include <sys/byteorder.h>"
-	define "HAS_SYS_BYTEORDER_H"
+log_raw "Checking if sys/socket.h exists: "
+if test_c "#include <sys/socket.h>"; then
+	TYPES="$TYPES\n#include <sys/socket.h>"
+	define "HAS_SYS_SOCKET_H"
 else
-	undef "HAS_SYS_BYTEORDER_H"
+	undef "HAS_SYS_SOCKET_H"
 fi
 
 log_raw "Checking if Winsock 2 exists: "
