@@ -43,6 +43,8 @@ These platforms are supported, but not mainly:
   1) Windows NT
      x86    is checked working on NT4.0 SP6 (Terminal Server).
      x86_64 is checked working on Server 2012R2.
+  2) GNU/Hurd
+     Checked working on Debian GNU/Hurd 12 i686-AT386.
 
 
 
