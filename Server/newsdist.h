@@ -56,6 +56,7 @@ int		nd_accept_ssl(nd_pass_t * pass);
 int		nd_init_ssl(void);
 int		nd_read(nd_pass_t * pass, void *buffer, int size);
 int		nd_write(nd_pass_t * pass, void *buffer, int size);
+int		nd_timeout(nd_pass_t * pass, int time);
 
 /*
  * util.c
@@ -65,6 +66,11 @@ char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
 char *		nd_gethostname(void);
 char *		nd_format(const char *str);
+
+/*
+ * nntpd.c
+ */
+void		nd_nntpd_handle(nd_pass_t * p);
 
 /*
  * Config implementation

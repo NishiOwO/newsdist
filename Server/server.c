@@ -168,10 +168,11 @@ nd_pass(void *tptr)
 {
 	nd_pass_t      *ptr = (nd_pass_t *) tptr;
 
-	if (nd_accept_ssl(ptr) >= 0) {
+	if (nd_accept_ssl(ptr) < 0) {
 		nd_close_socket(ptr);
 		free(ptr);
 	} else {
+		nd_nntpd_handle(ptr);
 	}
 #ifdef HAS_NW_BEGINTHREAD
 	ExitThread(EXIT_THREAD, 0);

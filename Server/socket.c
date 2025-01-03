@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#define INCLUDE_ERRNO
 #define INCLUDE_SOCKET
 
 #include "newsdist.h"
@@ -107,6 +108,37 @@ nd_write(nd_pass_t *pass, void *buffer, int size)
 	} else {
 		return send(pass->sock, buffer, size, 0);
 	}
+}
+
+int
+nd_timeout(nd_pass_t *pass, int time)
+{
+	int		result;
+
+	while (1) {
+#if defined(HAS_POLL)
+		struct pollfd	pfd;
+
+		pfd.fd = pass->sock;
+		pfd.events = POLLIN | POLLPRI;
+		result = poll(&pfd, 1, time);
+#elif defined(HAS_SELECT)
+		fd_set		fdset;
+		struct timeval	tv;
+
+		tv.tv_sec = time / 1000;
+		tv.tv_usec = time % 1000;
+		FD_ZERO(&fdset);
+		FD_SET(pass->sock, &fdset);
+		result = select(FD_SETSIZE, &fdset, NULL, NULL, &tv);
+#endif
+		if (result < 0) {
+			if (errno == EINTR)
+				continue;
+		}
+		break;
+	}
+	return (result > 0) ? 0 : -1;
 }
 
 void
