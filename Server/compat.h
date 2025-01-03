@@ -1,4 +1,3 @@
-
 /**
  * $Id$
  */
@@ -135,6 +134,22 @@ extern int	errno;
 #ifdef INCLUDE_SIGNAL
 #ifdef HAS_SIGNAL_H
 #include <signal.h>
+#endif
+#endif
+
+/*
+ * Include boolean or not
+ */
+#ifdef INCLUDE_BOOLEAN
+#if defined(HAS_STDBOOL_H) && !defined(__lint__)
+#include <stdbool.h>
+typedef bool NDBOOL;
+#define NDTRUE ((NDBOOL)1)
+#define NDFALSE ((NDBOOL)0)
+#else
+typedef unsigned char NDBOOL;
+#define NDTRUE ((NDBOOL)1)
+#define NDFALSE ((NDBOOL)0)
 #endif
 #endif
 

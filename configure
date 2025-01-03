@@ -812,6 +812,13 @@ check_number () {
 	fi
 }
 
+log_raw "Checking if stdbool.h exists: "
+if test_c "#include <stdbool.h>"; then
+	define "HAS_STDBOOL_H"
+else
+	undef "HAS_STDBOOL_H"
+fi
+
 log_raw "Checking if stdint.h exists: "
 if test_c "#include <stdint.h>"; then
 	define "HAS_STDINT_H"

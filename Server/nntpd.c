@@ -71,7 +71,12 @@ nd_nntpd_handle(nd_pass_t *p)
 
 		if (l == NULL)
 			break;
-		printf("[%s]\n", l);
+		if (nd_strcaseequ(l, "CAPABILITIES")) {
+			nd_write(p, "101 Here:\r\n", 3 + 1 + 4 + 1 + 2);
+			nd_write(p, ".\r\n", 3);
+		} else {
+			nd_write(p, "500 Pardon?\r\n", 3 + 1 + 6 + 1 + 2);
+		}
 		free(l);
 	}
 }

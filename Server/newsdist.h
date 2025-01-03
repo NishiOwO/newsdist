@@ -1,10 +1,11 @@
-
 /**
  * $Id$
  */
 
 #ifndef __NEWSDIST_H__
 #define __NEWSDIST_H__
+
+#define INCLUDE_BOOLEAN
 
 #include "../config.h"
 #include "compat.h"
@@ -60,6 +61,7 @@ char *		nd_strdup(const char *str);
 char *		nd_get_system(void);
 char *		nd_gethostname(void);
 char *		nd_format(const char *str);
+NDBOOL		nd_strcaseequ(const char *str1, const char *str2);
 
 /*
  * nntpd.c

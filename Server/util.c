@@ -7,6 +7,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "newsdist.h"
 
@@ -18,6 +19,19 @@ nd_strcat(const char *a, const char *b)
 	strcpy(str, a);
 	strcpy(str + strlen(a), b);
 	return str;
+}
+
+NDBOOL
+nd_strcaseequ(const char *str1, const char *str2){
+	int		i;
+
+	if (strlen(str1) != strlen(str2))
+		return NDFALSE;
+	for (i = 0; str1[i] != 0; i++) {
+		if (tolower((unsigned char)str1[i]) != tolower((unsigned char)str2[i]))
+			return NDFALSE;
+	}
+	return NDTRUE;
 }
 
 char *
