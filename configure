@@ -461,12 +461,12 @@ if test_c "#include <types.h>"; then
 else
 	undef "HAS_TYPES_H"
 fi
-log_raw "Checking if sys/socket.h exists: "
-if test_c "#include <sys/socket.h>"; then
-	TYPES="$TYPES\n#include <sys/socket.h>"
-	define "HAS_SYS_SOCKET_H"
+log_raw "Checking if netdb.h exists: "
+if test_c "#include <netdb.h>"; then
+	TYPES="$TYPES\n#include <netdb.h>"
+	define "HAS_NETDB_H"
 else
-	undef "HAS_SYS_SOCKET_H"
+	undef "HAS_NETDB_H"
 fi
 
 log_raw "Checking if Winsock 2 exists: "

@@ -15,9 +15,6 @@
 #ifdef HAS_SYS_TYPES_H
 #include <sys/types.h>
 #endif
-#ifdef HAS_SYS_BYTEORDER_H
-#include <sys/byteorder.h>
-#endif
 
 /*
  * Include socket headers or not
@@ -52,6 +49,7 @@ struct sockaddr_in {
 #include <netinet/tcp.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
 #ifdef IS_OS2
 #include <tcpustd.h>
 #endif
