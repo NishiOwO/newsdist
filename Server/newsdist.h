@@ -5,6 +5,17 @@
 #ifndef __NEWSDIST_H__
 #define __NEWSDIST_H__
 
+/**
+ * Memo
+ *
+ *         / INCLUDE_SOCKET  \             / socket \
+ *        |  INCLUDE_ERRNO    |            | errno   |
+ *        |  INCLUDE_SYSLOG   |            | syslog  |
+ * Define |  INCLUDE_UTSNAME  | to include | errno   | headers
+ *        |  INCLUDE_SIGNAL   |            | signal  |
+ *         \ INCLUDE_BOOLEAN /             \ boolean /
+ */
+
 #define INCLUDE_BOOLEAN
 
 #include "../config.h"

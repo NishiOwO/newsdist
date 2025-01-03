@@ -5,6 +5,8 @@
 #ifndef __NEWSDIST_COMPAT_H__
 #define __NEWSDIST_COMPAT_H__
 
+/* Do not include this file directly */
+
 #include "../config.h"
 
 #ifdef HAS_TYPES_H
