@@ -612,6 +612,10 @@ log_raw "Checking if libsocket exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "`lib socket`"; then
 	SOCKLIBS="$SOCKLIBS `lib socket`"
 fi
+log_raw "Checking if libnetwork exists: "
+if test_c "int main(int argc, char** argv){return 0;}" "`lib network`"; then
+	SOCKLIBS="$SOCKLIBS `lib network`"
+fi
 log_raw "Checking if libws2_32 exists: "
 if test_c "int main(int argc, char** argv){return 0;}" "`lib ws2_32`"; then
 	SOCKLIBS="$SOCKLIBS `lib ws2_32`"
