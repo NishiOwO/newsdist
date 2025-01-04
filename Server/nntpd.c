@@ -77,13 +77,26 @@ nd_nntpd_handle(nd_pass_t *p)
 			nd_write_string(p, "101 Here:\r\n");
 			nd_write_string(p, "VERSION 2\r\n");
 			nd_write_string(p, "IMPLEMENTATION NewsDist " NEWSDIST_VERSION "\r\n");
-			nd_write_string(p, "AUTHINFO USER\r\n");
+			nd_write_string(p, "AUTHINFO\r\n");
+			nd_write_string(p, "LIST ACTIVE MOTD NEWSGROUPS\r\n");
+			nd_write_string(p, "READER\r\n");
 			nd_write_string(p, ".\r\n");
+		} else if (nd_strcaseequ(l, "MODE READER")) {
+			fmt = nd_format(welcome_text);
+
+			if (nd_nntpd_status(p, 200, fmt)) {
+				free(fmt);
+				return;
+			}
+			free(fmt);
+		} else if (nd_strcaseequ(l, "LIST MOTD")) {
+
 		} else if (nd_strcaseequ(l, "QUIT")) {
 			nd_nntpd_status(p, 205, "Sayonara");
 			free(l);
 			break;
 		} else {
+			printf("[%s]\n", l);
 			nd_write_string(p, "500 Pardon?\r\n");
 		}
 		free(l);
