@@ -79,6 +79,10 @@ SSLCertificate		{
 	return SSLCERT;
 }
 
+MOTDPath		{
+	return MOTDPATH;
+}
+
 [ \t]+			{
 	return SPACES;
 }

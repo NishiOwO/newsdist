@@ -74,6 +74,7 @@ char *		nd_get_system(void);
 char *		nd_gethostname(void);
 char *		nd_format(const char *str);
 NDBOOL		nd_strcaseequ(const char *str1, const char *str2);
+int		nd_wildcard_match(const char *wildcard, const char *target);
 
 /*
  * nntpd.c
@@ -94,12 +95,14 @@ CONFIG_DECL int	plain_port;
 CONFIG_DECL char *ssl_key;
 CONFIG_DECL char *ssl_cert;
 CONFIG_DECL char *welcome_text;
+CONFIG_DECL char *motd_path;
 
 #define CONFIG_ASSIGN_DEFAULT \
 	ssl_port = 563; \
 	plain_port = 119; \
 	ssl_key = NULL; \
 	ssl_cert = NULL; \
-	welcome_text = NULL;
+	welcome_text = NULL; \
+	motd_path = NULL;
 
 #endif

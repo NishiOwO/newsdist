@@ -20,7 +20,7 @@ int yyconferror(const char*);
 
 %start list
 %token NEWLINE STRING NUMBER SPACES
-%token WELCOME PORT SSLPORT SSLKEY SSLCERT
+%token WELCOME PORT SSLPORT SSLKEY SSLCERT MOTDPATH
 
 %%
 
@@ -52,6 +52,10 @@ component	: WELCOME SPACES STRING NEWLINE {
 		| SSLCERT SPACES STRING NEWLINE {
 	if(ssl_cert != NULL) free(ssl_cert);
 	ssl_cert = $<string>3;
+}
+		| MOTDPATH SPACES STRING NEWLINE {
+	if(motd_path != NULL) free(motd_path);
+	motd_path = $<string>3;
 }
 		| NEWLINE;
 		;

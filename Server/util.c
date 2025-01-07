@@ -148,3 +148,28 @@ nd_format(const char *str)
 	}
 	return r;
 }
+
+/* https://qiita.com/gyu-don/items/5a640c6d2252a860c8cd */
+int
+nd_wildcard_match(const char *wildcard, const char *target)
+{
+	const char     *pw = wildcard, *pt = target;
+
+	while (1) {
+		if (*pt == 0) {
+			while (*pw == '*')
+				pw++;
+			return *pw == 0;
+		} else if (*pw == 0) {
+			return 0;
+		} else if (*pw == '*') {
+			return *(pw + 1) == 0 || nd_wildcard_match(pw, pt + 1) || nd_wildcard_match(pw + 1, pt);
+		} else if (*pw == '?' || (tolower((unsigned char)*pw) == tolower((unsigned char)*pt))) {
+			pw++;
+			pt++;
+			continue;
+		} else {
+			return 0;
+		}
+	}
+}
