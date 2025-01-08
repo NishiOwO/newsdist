@@ -3,6 +3,27 @@
 
 . ./Maintainer/tools.sh
 
+ERRORS=0
+for i in $DIRS; do
+	echo "--- $i"
+	for j in `list $i` `list_header $i`; do
+		echo "----- $j"
+		clang-format -i $j
+		if [ ! "$?" = "0" ]; then
+			ERRORS=$(($ERRORS + 1))
+		fi
+	done
+done
+echo
+echo "$ERRORS error(s)"
+if [ "$ERRORS" -gt 0 ]; then
+	exit 1
+fi
+
+exit 0
+
+### OBSOLETE CODE ###
+
 indent --version | grep GNU >/dev/null 2>&1
 if [ "$?" = "0" ]; then
 	ORIG="-orig"

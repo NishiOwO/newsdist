@@ -2,7 +2,4 @@
  * $Id$
  */
 
-void
-nd_db(void)
-{
-}
+void nd_db(void) {}
